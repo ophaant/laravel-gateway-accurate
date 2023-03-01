@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Accurate;
 
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
+use App\Models\Token;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -38,6 +38,26 @@ class AuthController extends Controller
         ];
 
         $respToken = sendReq('post', env('ACCURATE_AUTH_URL') . 'oauth/token', $params, true, true);
+
+        if ($respToken['http_code'] != 200) {
+            return $this->errorResponse($respToken, 'error', $respToken['http_code']);
+        }
+
+//        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
+        try {
+            Token::updateOrcreate(
+                ['token_type' => $respToken['token_type'],
+                ],
+                ['access_token' => $respToken['access_token'],
+                    'refresh_token' => $respToken['refresh_token'],
+                    'expires_in' => $respToken['expires_in'],
+                    'scope' => $respToken['scope']
+                ]
+            );
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return $this->errorResponse('Database Problem', '500', ['ORM Error']);
+        }
 
         return $this->successResponse($respToken, 'success', 200);
     }
