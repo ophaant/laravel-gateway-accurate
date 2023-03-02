@@ -22,7 +22,7 @@ trait ApiResponse{
         return response()->json($response, $code);
     }
 
-    protected function errorResponse(String $message,int $code=500, $error=null,String $customCode= null)
+    protected function errorResponse(String $message,int $code=500, String $customCode= null,$error=null)
     {
         $response = [
             'status'=>'error',
