@@ -9,23 +9,28 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 trait ApiResponse{
 
-    protected function successResponse($data, $message = null, $code = 200)
+    protected function successResponse($data=null, int $code = 200, String $message = null, array $meta = [])
     {
-        return response()->json([
-            'status'=> 'Success',
+        $response = [
+            'status'=> 'success',
             'message' => $message,
-            'data' => $data
-        ], $code);
+            'data' => $data,
+        ];
+        if (!empty($meta)) {
+            $response['meta'] = $meta;
+        }
+        return response()->json($response, $code);
     }
 
-    protected function errorResponse(String $message = null, int $code, array $error = [])
+    protected function errorResponse(String $message,int $code=500, $error=null,String $customCode= null)
     {
-        return response()->json([
-            'status'=>'Error',
+        $response = [
+            'status'=>'error',
             'message' => $message,
-            'data' => null,
-            'error' => $error
-        ], $code);
+            'errors' => $error,
+            'code' => $customCode
+        ];
+        return response()->json($response, $code);
     }
 
 }

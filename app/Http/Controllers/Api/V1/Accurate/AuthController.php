@@ -40,7 +40,7 @@ class AuthController extends Controller
         $respToken = sendReq('post', env('ACCURATE_AUTH_URL') . 'oauth/token', $params, true, true);
 
         if ($respToken['http_code'] != 200) {
-            return $this->errorResponse($respToken, 'error', $respToken['http_code']);
+            return $this->errorResponse($respToken['error'], $respToken['http_code'],$respToken['error_description']);
         }
 
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
@@ -56,9 +56,9 @@ class AuthController extends Controller
             );
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return $this->errorResponse('Database Problem', '500', ['ORM Error']);
+            return $this->errorResponse('Unable to connect to the database',500);
         }
 
-        return $this->successResponse($respToken, 'success', 200);
+        return $this->successResponse($respToken, 200,'success');
     }
 }
