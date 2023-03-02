@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Accurate;
 
+use App\Helpers\errorCodes;
 use App\Http\Controllers\Controller;
 use App\Models\Token;
 use Exception;
@@ -40,7 +41,7 @@ class AuthController extends Controller
         $respToken = sendReq('post', env('ACCURATE_AUTH_URL') . 'oauth/token', $params, true, true);
 
         if ($respToken['http_code'] != 200) {
-            return $this->errorResponse($respToken['error'], $respToken['http_code'],$respToken['error_description']);
+            return $this->errorResponse($respToken['error'], $respToken['http_code'], errorCodes::ACC_AUTH_INVALID, $respToken['error_description']);
         }
 
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
@@ -55,10 +56,18 @@ class AuthController extends Controller
                 ]
             );
         } catch (Exception $e) {
-            Log::error($e->getMessage());
-            return $this->errorResponse('Unable to connect to the database',500);
+            if ($e->errorInfo[0] == '23502') {
+                Log::error($e->getMessage());
+                return $this->errorResponse('Error: a not null violation occurred.', 500, errorCodes::DATABASE_QUERY_FAILED);
+            } elseif ($e->errorInfo[0] == '08006') {
+                Log::error($e->getMessage());
+                return $this->errorResponse('Unable to connect to the database', 500, errorCodes::DATABASE_CONNECTION_FAILED);
+            } else {
+                Log::error($e->getMessage());
+                return $this->errorResponse('Error: an unexpected error occurred.', 500, errorCodes::DATABASE_UNKNOWN_ERROR);
+            }
         }
 
-        return $this->successResponse($respToken, 200,'success');
+        return $this->successResponse($respToken, 200, 'success');
     }
 }
