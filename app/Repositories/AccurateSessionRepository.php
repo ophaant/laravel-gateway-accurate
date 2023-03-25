@@ -3,39 +3,34 @@
 namespace App\Repositories;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateDatabaseInterfaces;
-use App\Models\Database;
-use App\Models\Token;
+use App\Interfaces\AccurateSessionInterfaces;
+use App\Models\Session;
 use App\Traits\ApiResponse;
-use Dflydev\DotAccessData\Data;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AccurateDatabaseRepository implements AccurateDatabaseInterfaces
+class AccurateSessionRepository implements AccurateSessionInterfaces
 {
     use ApiResponse;
-    public function storeDatabase(array $data)
+    public function storeSessionAccurate(array $data)
     {
         DB::beginTransaction();
         try {
-
+            $now = Carbon::now();
             $col = collect($data);
-            $arrayCount = $col->count();
-            $databaseCount = Database::count();
-            if ($databaseCount > $arrayCount) {
-                Database::truncate();
-            }
-            $col->each(function ($item, $key) {
+            $col->each(function ($item, $key) use($now) {
 
-                Database::updateOrCreate([
-                    'code_database' => $item['id']
+                Session::updateOrCreate([
+                    'code_database' => $item['code_database']
                 ], [
-                    'name' => $item['alias']
+                    'session' =>$item['session'],
+                    'expire_in' => $now->addMinute(1440)
                 ]);
             });
             DB::commit();
-            return $this->successResponse(null, 200, 'Database Store Successfully');
+            return $this->successResponse(null, 200, 'Session Store Successfully');
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
@@ -52,11 +47,11 @@ class AccurateDatabaseRepository implements AccurateDatabaseInterfaces
         }
     }
 
-    public function getDatabase()
+    public function getSessionAccurate()
     {
-        $databases = Database::all();
+        $databases = Session::all();
         if (!$databases) {
-            return $this->errorResponse('Error: Database Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            return $this->errorResponse('Error: Session Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
         }
         return $databases;
     }

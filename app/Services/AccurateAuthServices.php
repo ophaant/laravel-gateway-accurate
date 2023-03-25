@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\errorCodes;
 use App\Repositories\AccurateDatabaseRepository;
+use App\Repositories\AccurateSessionRepository;
 use App\Repositories\AccurateTokenRepository;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Http;
@@ -14,11 +15,13 @@ class AccurateAuthServices
 
     protected $accurateTokenRepository;
     protected $accurateDatabaseRepository;
+    protected $accurateSessionRepository;
 
-    public function __construct(AccurateTokenRepository $accurateAuthRepository, AccurateDatabaseRepository $accurateDatabaseRepository)
+    public function __construct(AccurateTokenRepository $accurateAuthRepository, AccurateDatabaseRepository $accurateDatabaseRepository, AccurateSessionRepository $accurateSessionRepository)
     {
         $this->accurateTokenRepository = $accurateAuthRepository;
         $this->accurateDatabaseRepository = $accurateDatabaseRepository;
+        $this->accurateSessionRepository = $accurateSessionRepository;
     }
 
     public function getCode()
@@ -85,5 +88,25 @@ class AccurateAuthServices
         }
 
         return $this->accurateDatabaseRepository->storeDatabase($respDatabases['d']);
+    }
+    public function storeSession()
+    {
+        $token = $this->accurateTokenRepository->getAccessToken();
+        $databases = $this->accurateDatabaseRepository->getDatabase();
+        $dataResp = [];
+        $databases->each(function ($database) use ($token, &$dataResp) {
+
+            $respSession = sendReq('get', config('accurate.auth_url') . 'api/open-db.do', ['id'=>$database->code_database], false, false,$token);
+            if ($respSession['http_code'] != 200) {
+                return $this->errorResponse($respSession['error'], $respSession['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respSession['error_description']);
+            }
+            $arrayResp = [
+                'session'=>$respSession['session'],
+                'code_database'=>$database->code_database];
+            $dataResp[] = $arrayResp;
+        });
+
+        return $this->accurateSessionRepository->storeSessionAccurate($dataResp);
+
     }
 }

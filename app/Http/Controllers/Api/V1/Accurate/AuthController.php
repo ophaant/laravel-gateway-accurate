@@ -34,4 +34,8 @@ class AuthController extends Controller
     public function setDatabase(){
         return $this->accurateAuthServices->storeDatabases();
     }
+
+    public function setSession(){
+        return $this->accurateAuthServices->storeSession();
+    }
 }

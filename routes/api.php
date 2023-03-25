@@ -26,4 +26,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
     Route::post('/refresh-token', [AuthController::class,'refreshToken']);
     Route::post('/databases', [AuthController::class,'setDatabase']);
+    Route::post('/sessions', [AuthController::class,'setSession']);
 });
