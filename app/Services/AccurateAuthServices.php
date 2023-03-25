@@ -3,18 +3,22 @@
 namespace App\Services;
 
 use App\Helpers\errorCodes;
-use App\Repositories\AccurateAuthRepository;
+use App\Repositories\AccurateDatabaseRepository;
+use App\Repositories\AccurateTokenRepository;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Http;
 
 class AccurateAuthServices
 {
     use ApiResponse;
 
     protected $accurateTokenRepository;
+    protected $accurateDatabaseRepository;
 
-    public function __construct(AccurateAuthRepository $accurateAuthRepository)
+    public function __construct(AccurateTokenRepository $accurateAuthRepository, AccurateDatabaseRepository $accurateDatabaseRepository)
     {
         $this->accurateTokenRepository = $accurateAuthRepository;
+        $this->accurateDatabaseRepository = $accurateDatabaseRepository;
     }
 
     public function getCode()
@@ -53,5 +57,33 @@ class AccurateAuthServices
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
 
         return $this->accurateTokenRepository->storeToken($respToken);
+    }
+
+    public function refreshToken()
+    {
+        $params = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $this->accurateTokenRepository->getRefreshToken(),
+        ];
+
+        $respToken = sendReq('post', config('accurate.auth_url') . 'oauth/token', $params, true, true);
+
+        if ($respToken['http_code'] != 200) {
+            return $this->errorResponse($respToken['error'], $respToken['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respToken['error_description']);
+        }
+
+        return $this->accurateTokenRepository->storeToken($respToken);
+    }
+
+    public function storeDatabases()
+    {
+        $token = $this->accurateTokenRepository->getAccessToken();
+        $respDatabases = sendReq('get', config('accurate.auth_url') . 'api/db-list.do', [], false, false,$token);
+
+        if ($respDatabases['http_code'] != 200) {
+            return $this->errorResponse($respDatabases['error'], $respDatabases['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respDatabases['error_description']);
+        }
+
+        return $this->accurateDatabaseRepository->storeDatabase($respDatabases['d']);
     }
 }

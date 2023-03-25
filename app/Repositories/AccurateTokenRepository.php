@@ -3,14 +3,14 @@
 namespace App\Repositories;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateAuthInterfaces;
+use App\Interfaces\AccurateTokenInterfaces;
 use App\Models\Token;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AccurateAuthRepository implements AccurateAuthInterfaces
+class AccurateTokenRepository implements AccurateTokenInterfaces
 {
     use ApiResponse;
     public function storeToken(array $data)
@@ -27,7 +27,7 @@ class AccurateAuthRepository implements AccurateAuthInterfaces
                 ]
             );
             DB::commit();
-            return $this->successResponse($saveToken, 200, 'success');
+            return $this->successResponse(null, 200, 'Token Store Successfully');
         } catch (Exception $e) {
             DB::rollBack();
             if ($e->errorInfo[0] == '23502') {
@@ -41,5 +41,23 @@ class AccurateAuthRepository implements AccurateAuthInterfaces
                 return $this->errorResponse('Error: an unexpected error occurred.', 500, errorCodes::DATABASE_UNKNOWN_ERROR);
             }
         }
+    }
+
+    public function getRefreshToken()
+    {
+        $token = Token::select('refresh_token')->first();
+        if (!$token) {
+            return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+        }
+        return $token->refresh_token;
+    }
+
+    public function getAccessToken()
+    {
+        $token = Token::select('access_token')->first();
+        if (!$token) {
+            return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+        }
+        return $token->access_token;
     }
 }

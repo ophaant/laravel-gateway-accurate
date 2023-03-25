@@ -26,4 +26,12 @@ class AuthController extends Controller
     public function oauthCallback(Request $request){
         return $this->accurateAuthServices->oauthCallback($request);
     }
+
+    public function refreshToken(){
+        return $this->accurateAuthServices->refreshToken();
+    }
+
+    public function setDatabase(){
+        return $this->accurateAuthServices->storeDatabases();
+    }
 }

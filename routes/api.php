@@ -24,4 +24,6 @@ Route::prefix('v1')->group(function () {
     });
     Route::get('/auth', [AuthController::class,'getCode']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
+    Route::post('/refresh-token', [AuthController::class,'refreshToken']);
+    Route::post('/databases', [AuthController::class,'setDatabase']);
 });

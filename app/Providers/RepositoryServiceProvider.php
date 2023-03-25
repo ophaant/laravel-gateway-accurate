@@ -12,8 +12,12 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            'App\Interfaces\AccurateAuthInterfaces',
-            'App\Repositories\AccurateAuthRepository'
+            'App\Interfaces\AccurateTokenInterfaces',
+            'App\Repositories\AccurateTokenRepository',
+        );
+        $this->app->bind(
+            'App\Interfaces\AccurateDatabaseInterfaces',
+            'App\Repositories\AccurateDatabaseRepository',
         );
     }
 
