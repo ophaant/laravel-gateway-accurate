@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
 use App\Interfaces\AccurateDatabaseInterfaces;
 use App\Models\Database;
@@ -17,8 +18,8 @@ class AccurateDatabaseRepository implements AccurateDatabaseInterfaces
     use ApiResponse;
     public function storeDatabase(array $data)
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $col = collect($data);
             $arrayCount = $col->count();
@@ -39,25 +40,20 @@ class AccurateDatabaseRepository implements AccurateDatabaseInterfaces
         } catch (Exception $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
-            if ($e->errorInfo[0] == '23502') {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Error: a not null violation occurred.', 500, errorCodes::DATABASE_QUERY_FAILED);
-            } elseif ($e->errorInfo[0] == '08006') {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Unable to connect to the database', 500, errorCodes::DATABASE_CONNECTION_FAILED);
-            } else {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Error: '.$e->getMessage(), 500, errorCodes::DATABASE_UNKNOWN_ERROR);
-            }
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
     }
 
     public function getDatabase()
     {
-        $databases = Database::all();
-        if (!$databases) {
-            return $this->errorResponse('Error: Database Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+        try {
+            $databases = Database::all();
+            if (!$databases) {
+                return $this->errorResponse('Error: Database Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            }
+            return $databases;
+        } catch (Exception $e) {
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
-        return $databases;
     }
 }

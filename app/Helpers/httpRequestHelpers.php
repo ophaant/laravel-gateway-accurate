@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 if (!function_exists('sendReq')) {
-    function sendReq($method = null, $url = null, $params = null, $form = false, $basicAuth = false, $token = null)
+    function sendReq($method = null, $url = null, $params = null, $form = false, $basicAuth = false, $token = null,$headers = null)
     {
         try {
 
@@ -17,6 +17,9 @@ if (!function_exists('sendReq')) {
             }
             if ($token) {
                 $response = $response->withToken($token);
+            }
+            if ($headers) {
+                $response = $response->withHeaders($headers);
             }
             $response = $response->{$method}($url, $params);
             $data = $response->json();

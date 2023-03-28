@@ -2,11 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
 use App\Interfaces\AccurateTokenInterfaces;
 use App\Models\Token;
 use App\Traits\ApiResponse;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -15,9 +15,9 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
     use ApiResponse;
     public function storeToken(array $data)
     {
-        DB::beginTransaction();
         try {
-            $saveToken = Token::updateOrcreate(
+            DB::beginTransaction();
+            Token::updateOrcreate(
                 ['token_type' => $data['token_type'],
                 ],
                 ['access_token' => $data['access_token'],
@@ -28,7 +28,7 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
             );
             DB::commit();
             return $this->successResponse(null, 200, 'Token Store Successfully');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             if ($e->errorInfo[0] == '23502') {
                 Log::error($e->getMessage());
@@ -45,19 +45,28 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
 
     public function getRefreshToken()
     {
-        $token = Token::select('refresh_token')->first();
-        if (!$token) {
-            return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+        try {
+            $token = Token::select('refresh_token')->first();
+            if (!$token) {
+                return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            }
+            return $token->refresh_token;
+        }catch (\Exception $e) {
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
-        return $token->refresh_token;
     }
 
     public function getAccessToken()
     {
-        $token = Token::select('access_token')->first();
-        if (!$token) {
-            return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+        try {
+            $token = Token::select('access_token')->first();
+            if (!$token) {
+                return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            }
+            return $token->access_token;
+
+        }catch (\Exception $e){
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
-        return $token->access_token;
     }
 }

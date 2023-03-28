@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Traits\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -66,9 +67,16 @@ class Handler extends ExceptionHandler
         if ($exception instanceof NotFoundHttpException) {
             return $this->errorResponse('The specified URL cannot be found', 404);
         }
+        if ($exception instanceof ValidationException) {
+            return $this->errorResponse($exception->getMessage(), 400, null, $exception->errors());
+        }
 
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if ($exception instanceof handleDatabaseException) {
+            return $this->errorResponse($exception->getMessage(),  $exception->getCode(), $exception->getCustomCode());
         }
 
         if (config('app.debug')) {
