@@ -5,5 +5,6 @@ return [
     'client_secret' => env('ACCURATE_CLIENT_SECRET'),
     'auth_url' => env('ACCURATE_AUTH_URL'),
     'public_url' => env('ACCURATE_PUBLIC_URL'),
+    'zeus_url' => env('ACCURATE_ZEUS_URL'),
     'redirect_url' => env('ACCURATE_REDIRECT_URL'),
 ];
