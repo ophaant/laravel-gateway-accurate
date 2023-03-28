@@ -20,6 +20,7 @@ class CustomerController extends Controller
         $code_database = $request->code_database;
         $page = $request->page;
         return $this->accurateCustomerServices->getCustomer($code_database, $page);
+//        return $this->accurateCustomerServices->getAllCustomer($code_database);
     }
 
 }

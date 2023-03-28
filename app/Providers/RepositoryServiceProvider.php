@@ -23,6 +23,10 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Interfaces\AccurateSessionInterfaces',
             'App\Repositories\AccurateSessionRepository',
         );
+        $this->app->bind(
+            'App\Interfaces\AccurateCustomerInterfaces',
+            'App\Repositories\AccurateCustomerRepository',
+        );
     }
 
     /**

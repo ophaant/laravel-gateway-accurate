@@ -30,16 +30,7 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
             return $this->successResponse(null, 200, 'Token Store Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            if ($e->errorInfo[0] == '23502') {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Error: a not null violation occurred.', 500, errorCodes::DATABASE_QUERY_FAILED);
-            } elseif ($e->errorInfo[0] == '08006') {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Unable to connect to the database', 500, errorCodes::DATABASE_CONNECTION_FAILED);
-            } else {
-                Log::error($e->getMessage());
-                return $this->errorResponse('Error: an unexpected error occurred.', 500, errorCodes::DATABASE_UNKNOWN_ERROR);
-            }
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
     }
 

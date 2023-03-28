@@ -59,7 +59,10 @@ class AccurateAuthServices
 
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
 
-        return $this->accurateTokenRepository->storeToken($respToken);
+        $this->accurateTokenRepository->storeToken($respToken);
+        $this->storeDatabases();
+        $this->storeSession();
+        return $this->successResponse(null,200, 'Setup Auth Successfully');
     }
 
     public function refreshToken()
