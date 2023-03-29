@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Exceptions\handleDatabaseException;
+use App\Helpers\errorCodes;
 use App\Interfaces\AccurateEmployeeInterfaces;
 use App\Models\Employee;
 use App\Traits\ApiResponse;
@@ -48,6 +49,10 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
             DB::commit();
             return $this->successResponse($customer, 200, 'Employee Store Successfully');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }catch (\PDOException $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());

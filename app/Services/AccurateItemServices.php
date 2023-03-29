@@ -83,7 +83,7 @@ class AccurateItemServices
                 $headers = [
                     'Authorization' => 'Bearer ' . $token,
                     'Accept' => 'application/json',
-                    'X-Session-ID' => $session.'1',
+                    'X-Session-ID' => $session,
                 ];
 
                 $respItem = sendReq('GET', $url . 'item/list.do', $params, false, false, null, $headers);

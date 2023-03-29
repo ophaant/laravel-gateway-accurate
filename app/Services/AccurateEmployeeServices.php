@@ -9,6 +9,7 @@ use App\Repositories\AccurateTokenRepository;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AccurateEmployeeServices
 {
@@ -47,7 +48,10 @@ class AccurateEmployeeServices
             $respEmployee = sendReq('GET', $url . 'employee/list.do', $params, false, false, null, $headers);
 
             if ($respEmployee['http_code'] != 200) {
-                return $this->errorResponse($respEmployee['error'], $respEmployee['http_code'], errorCodes::ACC_EMP_FAILED, $respEmployee['error_description']);
+                Log::debug($respEmployee);
+                return $this->errorResponse(isset($respEmployee['error']) ? $respEmployee['error'] : (isset($respEmployee['message']) ? $respEmployee['message'] : $respEmployee['d'][0]),
+                    $respEmployee['http_code'], errorCodes::ACC_EMP_FAILED,
+                    isset($respEmployee['error_description']) ? $respEmployee['error_description'] : (isset($respEmployee['error_detail']) ? $respEmployee['error_detail'] : null));
             }
             $data = $respEmployee['d'];
             $meta = [
@@ -58,7 +62,7 @@ class AccurateEmployeeServices
             ];
             return $this->successResponse($data, 200, 'Employees Successfully', $meta);
         } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::ACC_EMP_FAILED, $e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
 
     }
@@ -88,8 +92,12 @@ class AccurateEmployeeServices
                 $respEmployee = sendReq('GET', $url . 'employee/list.do', $params, false, false, null, $headers);
 
                 if ($respEmployee['http_code'] != 200) {
-                    return $this->errorResponse($respEmployee['error'], $respEmployee['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respEmployee['error_description']);
+                    Log::debug($respEmployee);
+                    return $this->errorResponse(isset($respEmployee['error']) ? $respEmployee['error'] : (isset($respEmployee['message']) ? $respEmployee['message'] : $respEmployee['d'][0]),
+                        $respEmployee['http_code'], errorCodes::ACC_EMP_FAILED,
+                        isset($respEmployee['error_description']) ? $respEmployee['error_description'] : (isset($respEmployee['error_detail']) ? $respEmployee['error_detail'] : null));
                 }
+
                 $data = $respEmployee['d'];
                 $meta = [
                     'pageCount' => $respEmployee['sp']['pageCount'],
@@ -104,7 +112,7 @@ class AccurateEmployeeServices
 
             return $this->accurateEmployeeRepository->storeEmployee($results, $code_database);
         } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::ACC_EMP_FAILED, $e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
 
     }

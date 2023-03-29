@@ -9,6 +9,7 @@ use App\Repositories\AccurateTokenRepository;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use PHPUnit\Event\Code\Throwable;
 
 class AccurateCustomerServices
@@ -48,8 +49,12 @@ class AccurateCustomerServices
             $respCustomer = sendReq('GET', config('accurate.public_url') . 'customer/list.do', $params, false, false, null, $headers);
 
             if ($respCustomer['http_code'] != 200) {
-                return $this->errorResponse($respCustomer['error'], $respCustomer['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respCustomer['error_description']);
+                Log::debug($respCustomer);
+                return $this->errorResponse(isset($respCustomer['error']) ? $respCustomer['error'] : (isset($respCustomer['message']) ? $respCustomer['message'] : $respCustomer['d'][0]),
+                    $respCustomer['http_code'], errorCodes::ACC_CUST_FAILED,
+                    isset($respCustomer['error_description']) ? $respCustomer['error_description'] : (isset($respCustomer['error_detail']) ? $respCustomer['error_detail'] : null));
             }
+
             $data = $respCustomer['d'];
             $meta = [
                 'pageCount' => $respCustomer['sp']['pageCount'],
@@ -59,7 +64,7 @@ class AccurateCustomerServices
             ];
             return $this->successResponse($data, 200, 'Customers Successfully', $meta);
         } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::ACC_CUST_FAILED, $e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
 
     }
@@ -89,8 +94,12 @@ class AccurateCustomerServices
                 $respCustomer = sendReq('GET', $url . 'customer/list.do', $params, false, false, null, $headers);
 
                 if ($respCustomer['http_code'] != 200) {
-                    return $this->errorResponse($respCustomer['error'], $respCustomer['http_code'], errorCodes::ACC_TOKEN_EXPIRED, $respCustomer['error_description']);
+                    Log::debug($respCustomer);
+                    return $this->errorResponse(isset($respCustomer['error']) ? $respCustomer['error'] : (isset($respCustomer['message']) ? $respCustomer['message'] : $respCustomer['d'][0]),
+                        $respCustomer['http_code'], errorCodes::ACC_CUST_FAILED,
+                        isset($respCustomer['error_description']) ? $respCustomer['error_description'] : (isset($respCustomer['error_detail']) ? $respCustomer['error_detail'] : null));
                 }
+
                 $data = $respCustomer['d'];
                 $meta = [
                     'pageCount' => $respCustomer['sp']['pageCount'],
@@ -105,7 +114,7 @@ class AccurateCustomerServices
 
             return $this->accurateCustomerRepository->storeCustomer($results, $code_database);
         } catch (Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::ACC_CUST_FAILED, $e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
 
     }
