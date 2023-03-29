@@ -29,6 +29,7 @@ if (!function_exists('sendReq')) {
             return [
                 'status' => 'error',
                 'http_code' => 500,
+                'error_detail'=> $th->getMessage(),
                 'message' => 'Server Unavailable'
             ];
         }
