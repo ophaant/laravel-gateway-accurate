@@ -9,8 +9,10 @@ class errorCodes
     const ACC_TOKEN_NOT_FOUND = 'ACU-003';
     const ACC_CUST_FAILED = 'ACU-004';
     const ACC_EMP_FAILED = 'ACU-005';
+    const ACC_ITM_FAILED = 'ACU-006';
     const DATABASE_CONNECTION_FAILED = 'DBC-001';
     const DATABASE_QUERY_FAILED = 'DBC-002';
     const DATABASE_UNKNOWN_ERROR = 'DBC-003';
+    const CODE_WRONG_ERROR = 'CWR-001';
 
 }

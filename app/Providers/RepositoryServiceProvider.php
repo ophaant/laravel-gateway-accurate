@@ -27,6 +27,14 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Interfaces\AccurateCustomerInterfaces',
             'App\Repositories\AccurateCustomerRepository',
         );
+        $this->app->bind(
+            'App\Interfaces\AccurateEmployeeInterfaces',
+            'App\Repositories\AccurateEmployeeRepository',
+        );
+        $this->app->bind(
+            'App\Interfaces\AccurateItemInterfaces',
+            'App\Repositories\AccurateItemRepository',
+        );
     }
 
     /**
