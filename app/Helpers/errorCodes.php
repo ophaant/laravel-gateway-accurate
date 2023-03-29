@@ -8,6 +8,7 @@ class errorCodes
     const ACC_TOKEN_EXPIRED = 'ACU-002';
     const ACC_TOKEN_NOT_FOUND = 'ACU-003';
     const ACC_CUST_FAILED = 'ACU-004';
+    const ACC_EMP_FAILED = 'ACU-005';
     const DATABASE_CONNECTION_FAILED = 'DBC-001';
     const DATABASE_QUERY_FAILED = 'DBC-002';
     const DATABASE_UNKNOWN_ERROR = 'DBC-003';

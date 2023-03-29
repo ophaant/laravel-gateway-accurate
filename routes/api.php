@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Accurate\AuthController;
 use App\Http\Controllers\Api\V1\Accurate\CustomerController;
+use App\Http\Controllers\Api\V1\Accurate\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::prefix('v1')->group(function () {
     });
     Route::get('/auth', [AuthController::class,'getCode']);
     Route::get('/customers', [CustomerController::class,'getCustomer']);
+    Route::get('/employees', [EmployeeController::class,'getEmployee']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
     Route::post('/refresh-token', [AuthController::class,'refreshToken']);
     Route::post('/databases', [AuthController::class,'setDatabase']);
