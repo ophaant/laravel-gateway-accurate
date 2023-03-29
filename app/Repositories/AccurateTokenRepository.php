@@ -73,4 +73,8 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
+    public function checkToken()
+    {
+        return Token::count();
+    }
 }

@@ -24,14 +24,18 @@ use Illuminate\Support\Facades\Route;
 //});
 Route::prefix('v1')->group(function () {
     Route::get('/', function () {
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success','data'=>'Gateway Accurate Version 1.0'], 200);
     });
+
     Route::get('/auth', [AuthController::class,'getCode']);
-    Route::get('/databases', [DatabaseController::class,'index']);
-    Route::get('/customers', [CustomerController::class,'getCustomer']);
-    Route::get('/employees', [EmployeeController::class,'getEmployee']);
-    Route::get('/items', [ItemController::class,'getItem']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
-    Route::post('/refresh-token', [AuthController::class,'refreshToken']);
-    Route::post('/sessions', [AuthController::class,'setSession']);
+
+    Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
+        Route::get('/databases', [DatabaseController::class,'index']);
+        Route::get('/customers', [CustomerController::class,'getCustomer']);
+        Route::get('/employees', [EmployeeController::class,'getEmployee']);
+        Route::get('/items', [ItemController::class,'getItem']);
+        Route::post('/refresh-token', [AuthController::class,'refreshToken']);
+        Route::post('/sessions', [AuthController::class,'setSession']);
+    });
 });
