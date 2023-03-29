@@ -29,11 +29,10 @@ class AccurateCustomerServices
 
     public function getCustomer($code_database, $page = 1)
     {
+        $url = $this->checkDatabaseAccurate($code_database);
+        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
+        $token = $this->accurateTokenRepository->getAccessToken();
         try {
-
-            $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-            $token = $this->accurateTokenRepository->getAccessToken();
-
             $params = [
                 'fields' => 'customerNo,name,id',
                 'sp.sort' => 'id|desc',
@@ -46,7 +45,7 @@ class AccurateCustomerServices
                 'X-Session-ID' => $session,
             ];
 
-            $respCustomer = sendReq('GET', config('accurate.public_url') . 'customer/list.do', $params, false, false, null, $headers);
+            $respCustomer = sendReq('GET', $url . 'customer/list.do', $params, false, false, null, $headers);
 
             if ($respCustomer['http_code'] != 200) {
                 Log::debug($respCustomer);

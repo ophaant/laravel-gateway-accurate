@@ -48,12 +48,12 @@ class AccurateCustomerRepository implements AccurateCustomerInterfaces
                 });
             DB::commit();
             return $this->successResponse($customer, 200, 'Customer Store Successfully');
-        } catch (\Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 

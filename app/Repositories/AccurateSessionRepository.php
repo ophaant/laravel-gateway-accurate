@@ -31,14 +31,14 @@ class AccurateSessionRepository implements AccurateSessionInterfaces
             });
             DB::commit();
             return $this->successResponse(null, 200, 'Session Store Successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }catch (\PDOException $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 
@@ -50,12 +50,12 @@ class AccurateSessionRepository implements AccurateSessionInterfaces
                 return $this->errorResponse('Error: Session Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
             }
             return $databases->session;
-        }catch (\Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 }

@@ -17,7 +17,7 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
     {
         try {
             DB::beginTransaction();
-            Token::updateOrcreate(
+            $token = Token::updateOrcreate(
                 ['token_type' => $data['token_type'],
                 ],
                 ['access_token' => $data['access_token'],
@@ -27,15 +27,15 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
                 ]
             );
             DB::commit();
-            return $this->successResponse(null, 200, 'Token Store Successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+            return $token;
         }catch (\PDOException $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            DB::rollBack();
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 
@@ -47,12 +47,12 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
                 return $this->errorResponse('Error: token not found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
             }
             return $token->refresh_token;
-        }catch (\Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 
@@ -65,12 +65,12 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
             }
             return $token->access_token;
 
-        }catch (\Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 }

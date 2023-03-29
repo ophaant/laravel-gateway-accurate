@@ -31,6 +31,6 @@ Route::prefix('v1')->group(function () {
     Route::get('/items', [ItemController::class,'getItem']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
     Route::post('/refresh-token', [AuthController::class,'refreshToken']);
-    Route::post('/databases', [AuthController::class,'setDatabase']);
+    Route::get('/databases', [AuthController::class,'getDatabase']);
     Route::post('/sessions', [AuthController::class,'setSession']);
 });

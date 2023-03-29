@@ -31,8 +31,8 @@ class AuthController extends Controller
         return $this->accurateAuthServices->refreshToken();
     }
 
-    public function setDatabase(){
-        return $this->accurateAuthServices->storeDatabases();
+    public function getDatabase(){
+        return $this->accurateAuthServices->getDatabases();
     }
 
     public function setSession(){
