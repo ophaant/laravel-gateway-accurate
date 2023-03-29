@@ -12,7 +12,7 @@ class Customer extends Model
     use HasUuids;
 
     protected $table = 'customers';
-    protected $fillable = ['code_database', 'customer_name', 'customer_no', 'customer_id'];
+    protected $fillable = ['code_database', 'customer_name', 'customer_no', 'customer_id','code_array'];
 
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
