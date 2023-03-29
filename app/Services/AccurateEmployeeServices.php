@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\errorCodes;
-use App\Repositories\AccurateEmployeeRepository;
-use App\Repositories\AccurateSessionRepository;
-use App\Repositories\AccurateTokenRepository;
+use App\Interfaces\AccurateEmployeeInterfaces;
+use App\Interfaces\AccurateSessionInterfaces;
+use App\Interfaces\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
@@ -15,22 +15,22 @@ class AccurateEmployeeServices
 {
     use ApiResponse, checkUrlAccurate;
 
-    protected $accurateSessionRepository;
-    protected $accurateTokenRepository;
-    protected $accurateEmployeeRepository;
+    protected $accurateSessionInterfaces;
+    protected $accurateTokenInterfaces;
+    protected $accurateEmployeeInterfaces;
 
-    public function __construct(AccurateSessionRepository $accurateSessionRepository, AccurateTokenRepository $accurateTokenRepository, AccurateEmployeeRepository $accurateEmployeeRepository)
+    public function __construct(AccurateSessionInterfaces $accurateSessionInterfaces, AccurateTokenInterfaces $accurateTokenInterfaces, AccurateEmployeeInterfaces $accurateEmployeeInterfaces)
     {
-        $this->accurateSessionRepository = $accurateSessionRepository;
-        $this->accurateTokenRepository = $accurateTokenRepository;
-        $this->accurateEmployeeRepository = $accurateEmployeeRepository;
+        $this->accurateSessionInterfaces = $accurateSessionInterfaces;
+        $this->accurateTokenInterfaces = $accurateTokenInterfaces;
+        $this->accurateEmployeeInterfaces = $accurateEmployeeInterfaces;
     }
 
     public function getEmployee($code_database, $page = 1)
     {
         $url = $this->checkDatabaseAccurate($code_database);
-        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-        $token = $this->accurateTokenRepository->getAccessToken();
+        $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+        $token = $this->accurateTokenInterfaces->getAccessToken();
         try {
 
             $params = [
@@ -70,8 +70,8 @@ class AccurateEmployeeServices
     public function getAllEmployee($code_database)
     {
         $url = $this->checkDatabaseAccurate($code_database);
-        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-        $token = $this->accurateTokenRepository->getAccessToken();
+        $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+        $token = $this->accurateTokenInterfaces->getAccessToken();
         try {
 
             $page = 1;
@@ -110,7 +110,7 @@ class AccurateEmployeeServices
                 $page++;
             }while($page <= $meta['pageCount']);
 
-            return $this->accurateEmployeeRepository->storeEmployee($results, $code_database);
+            return $this->accurateEmployeeInterfaces->storeEmployee($results, $code_database);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }

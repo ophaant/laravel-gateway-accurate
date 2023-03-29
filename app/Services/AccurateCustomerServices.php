@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\errorCodes;
-use App\Repositories\AccurateCustomerRepository;
-use App\Repositories\AccurateSessionRepository;
-use App\Repositories\AccurateTokenRepository;
+use App\Interfaces\AccurateCustomerInterfaces;
+use App\Interfaces\AccurateSessionInterfaces;
+use App\Interfaces\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
@@ -16,22 +16,22 @@ class AccurateCustomerServices
 {
     use ApiResponse, checkUrlAccurate;
 
-    protected $accurateSessionRepository;
-    protected $accurateTokenRepository;
-    protected $accurateCustomerRepository;
+    protected $accurateSessionInterfaces;
+    protected $accurateTokenInterfaces;
+    protected $accurateCustomerInterfaces;
 
-    public function __construct(AccurateSessionRepository $accurateSessionRepository, AccurateTokenRepository $accurateTokenRepository, AccurateCustomerRepository $accurateCustomerRepository)
+    public function __construct(AccurateSessionInterfaces $accurateSessionInterfaces, AccurateTokenInterfaces $accurateTokenInterfaces, AccurateCustomerInterfaces $accurateCustomerInterfaces)
     {
-        $this->accurateSessionRepository = $accurateSessionRepository;
-        $this->accurateTokenRepository = $accurateTokenRepository;
-        $this->accurateCustomerRepository = $accurateCustomerRepository;
+        $this->accurateSessionInterfaces = $accurateSessionInterfaces;
+        $this->accurateTokenInterfaces = $accurateTokenInterfaces;
+        $this->accurateCustomerInterfaces = $accurateCustomerInterfaces;
     }
 
     public function getCustomer($code_database, $page = 1)
     {
         $url = $this->checkDatabaseAccurate($code_database);
-        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-        $token = $this->accurateTokenRepository->getAccessToken();
+        $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+        $token = $this->accurateTokenInterfaces->getAccessToken();
         try {
             $params = [
                 'fields' => 'customerNo,name,id',
@@ -72,8 +72,8 @@ class AccurateCustomerServices
     {
         try {
             $url = $this->checkDatabaseAccurate($code_database);
-            $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-            $token = $this->accurateTokenRepository->getAccessToken();
+            $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+            $token = $this->accurateTokenInterfaces->getAccessToken();
 
             $page = 1;
             $results = [];
@@ -111,7 +111,7 @@ class AccurateCustomerServices
                 $page++;
             }while($page <= $meta['pageCount']);
 
-            return $this->accurateCustomerRepository->storeCustomer($results, $code_database);
+            return $this->accurateCustomerInterfaces->storeCustomer($results, $code_database);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }

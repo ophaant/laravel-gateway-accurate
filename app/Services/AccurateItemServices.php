@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\errorCodes;
-use App\Repositories\AccurateItemRepository;
-use App\Repositories\AccurateSessionRepository;
-use App\Repositories\AccurateTokenRepository;
+use App\Interfaces\AccurateItemInterfaces;
+use App\Interfaces\AccurateSessionInterfaces;
+use App\Interfaces\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
@@ -15,22 +15,22 @@ class AccurateItemServices
 {
     use ApiResponse, checkUrlAccurate;
 
-    protected $accurateSessionRepository;
-    protected $accurateTokenRepository;
-    protected $accurateItemRepository;
+    protected $accurateSessionInterfaces;
+    protected $accurateTokenInterfaces;
+    protected $accurateItemInterfaces;
 
-    public function __construct(AccurateSessionRepository $accurateSessionRepository, AccurateTokenRepository $accurateTokenRepository, AccurateItemRepository $accurateItemRepository)
+    public function __construct(AccurateSessionInterfaces $accurateSessionInterfaces, AccurateTokenInterfaces $accurateTokenInterfaces, AccurateItemInterfaces $accurateItemInterfaces)
     {
-        $this->accurateSessionRepository = $accurateSessionRepository;
-        $this->accurateTokenRepository = $accurateTokenRepository;
-        $this->accurateItemRepository = $accurateItemRepository;
+        $this->accurateSessionInterfaces = $accurateSessionInterfaces;
+        $this->accurateTokenInterfaces = $accurateTokenInterfaces;
+        $this->accurateItemInterfaces = $accurateItemInterfaces;
     }
 
     public function getItem($code_database, $page = 1)
     {
         $url = $this->checkDatabaseAccurate($code_database);
-        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-        $token = $this->accurateTokenRepository->getAccessToken();
+        $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+        $token = $this->accurateTokenInterfaces->getAccessToken();
         try {
 
             $params = [
@@ -67,8 +67,8 @@ class AccurateItemServices
     public function getAllItem($code_database)
     {
         $url = $this->checkDatabaseAccurate($code_database);
-        $session = $this->accurateSessionRepository->getSessionAccurate($code_database);
-        $token = $this->accurateTokenRepository->getAccessToken();
+        $session = $this->accurateSessionInterfaces->getSessionAccurate($code_database);
+        $token = $this->accurateTokenInterfaces->getAccessToken();
         try {
 
             $page = 1;
@@ -104,7 +104,7 @@ class AccurateItemServices
                 $page++;
             } while ($page <= $meta['pageCount']);
 
-            return $this->accurateItemRepository->storeItem($results, $code_database);
+            return $this->accurateItemInterfaces->storeItem($results, $code_database);
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500, errorCodes::ACC_ITM_FAILED, $e->getMessage());
         }

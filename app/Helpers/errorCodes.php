@@ -10,6 +10,8 @@ class errorCodes
     const ACC_CUST_FAILED = 'ACU-004';
     const ACC_EMP_FAILED = 'ACU-005';
     const ACC_ITM_FAILED = 'ACU-006';
+    const ACC_DB_FAILED = 'ACU-007';
+    const ACC_SESSION_FAILED = 'ACU-008';
     const DATABASE_CONNECTION_FAILED = 'DBC-001';
     const DATABASE_QUERY_FAILED = 'DBC-002';
     const DATABASE_UNKNOWN_ERROR = 'DBC-003';

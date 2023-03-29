@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AccurateTokenInterfaces;
+use App\Repositories\AccurateTokenRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -12,8 +14,8 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            'App\Interfaces\AccurateTokenInterfaces',
-            'App\Repositories\AccurateTokenRepository',
+            AccurateTokenInterfaces::class,
+            AccurateTokenRepository::class,
         );
         $this->app->bind(
             'App\Interfaces\AccurateDatabaseInterfaces',

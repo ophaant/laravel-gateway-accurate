@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Helpers\errorCodes;
-use App\Repositories\AccurateDatabaseRepository;
-use App\Repositories\AccurateSessionRepository;
-use App\Repositories\AccurateTokenRepository;
+use App\Interfaces\AccurateDatabaseInterfaces;
+use App\Interfaces\AccurateSessionInterfaces;
+use App\Interfaces\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
 use Exceptionn;
@@ -15,15 +15,21 @@ class AccurateAuthServices
 {
     use ApiResponse;
 
-    protected $accurateTokenRepository;
-    protected $accurateDatabaseRepository;
-    protected $accurateSessionRepository;
+    protected $accurateTokenInterfaces;
+    protected $accurateDatabaseInterfaces;
+    protected $accurateSessionInterfaces;
+    protected $accurateSessionServices;
+    protected $accurateDatabaseServices;
 
-    public function __construct(AccurateTokenRepository $accurateAuthRepository, AccurateDatabaseRepository $accurateDatabaseRepository, AccurateSessionRepository $accurateSessionRepository)
+    public function __construct(AccurateTokenInterfaces $accurateAuthInterfaces, AccurateDatabaseInterfaces $accurateDatabaseInterfaces,
+                                AccurateSessionInterfaces $accurateSessionInterfaces, AccurateSessionServices $accurateSessionServices,
+    AccurateDatabaseServices $accurateDatabaseServices)
     {
-        $this->accurateTokenRepository = $accurateAuthRepository;
-        $this->accurateDatabaseRepository = $accurateDatabaseRepository;
-        $this->accurateSessionRepository = $accurateSessionRepository;
+        $this->accurateTokenInterfaces = $accurateAuthInterfaces;
+        $this->accurateDatabaseInterfaces = $accurateDatabaseInterfaces;
+        $this->accurateSessionInterfaces = $accurateSessionInterfaces;
+        $this->accurateSessionServices = $accurateSessionServices;
+        $this->accurateDatabaseServices = $accurateDatabaseServices;
     }
 
     public function getCode()
@@ -70,9 +76,9 @@ class AccurateAuthServices
 
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
 
-            $this->accurateTokenRepository->storeToken($respToken);
-            $this->storeDatabases();
-            $this->storeSession();
+            $this->accurateTokenInterfaces->storeToken($respToken);
+            $this->accurateDatabaseServices->storeDatabase();
+            $this->accurateSessionServices->storeSession();
             return $this->successResponse(null, 200, 'Setup Auth Successfully');
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -80,79 +86,9 @@ class AccurateAuthServices
         }
 
     }
-
-    public function storeDatabases()
-    {
-        $token = $this->accurateTokenRepository->getAccessToken();
-        try {
-            $respDatabases = sendReq('get', config('accurate.auth_url') . 'api/db-list.do', [], false, false, $token);
-
-            if ($respDatabases['http_code'] != 200) {
-                Log::debug($respDatabases);
-                return $this->errorResponse(isset($respDatabases['error']) ? $respDatabases['error'] : (isset($respDatabases['message']) ? $respDatabases['message'] : $respDatabases['d'][0]),
-                    $respDatabases['http_code'], errorCodes::ACC_CUST_FAILED,
-                    isset($respDatabases['error_description']) ? $respDatabases['error_description'] : (isset($respDatabases['error_detail']) ? $respDatabases['error_detail'] : null));
-            }
-
-            return $this->accurateDatabaseRepository->storeDatabase($respDatabases['d']);
-        } catch (Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
-        }
-    }
-    public function getDatabases()
-    {
-        $token = $this->accurateTokenRepository->getAccessToken();
-        try {
-            $respDatabases = sendReq('get', config('accurate.auth_url') . 'api/db-list.do', [], false, false, $token);
-
-            if ($respDatabases['http_code'] != 200) {
-                Log::debug($respDatabases);
-                return $this->errorResponse(isset($respDatabases['error']) ? $respDatabases['error'] : (isset($respDatabases['message']) ? $respDatabases['message'] : $respDatabases['d'][0]),
-                    $respDatabases['http_code'], errorCodes::ACC_CUST_FAILED,
-                    isset($respDatabases['error_description']) ? $respDatabases['error_description'] : (isset($respDatabases['error_detail']) ? $respDatabases['error_detail'] : null));
-            }
-
-            return $this->successResponse($respDatabases['d'], 200, 'List Databases Successfully');
-        } catch (Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
-        }
-    }
-
-    public function storeSession()
-    {
-        $token = $this->accurateTokenRepository->getAccessToken();
-        $databases = $this->accurateDatabaseRepository->getDatabase();
-        try {
-            $dataResp = [];
-            $databases->each(function ($database) use ($token, &$dataResp) {
-
-                $respSession = sendReq('get', config('accurate.auth_url') . 'api/open-db.do', ['id' => $database->code_database], false, false, $token);
-                if ($respSession['http_code'] != 200) {
-                    Log::debug($respSession);
-                    return $this->errorResponse(isset($respSession['error']) ? $respSession['error'] : (isset($respSession['message']) ? $respSession['message'] : $respSession['d'][0]),
-                        $respSession['http_code'], errorCodes::ACC_CUST_FAILED,
-                        isset($respSession['error_description']) ? $respSession['error_description'] : (isset($respSession['error_detail']) ? $respSession['error_detail'] : null));
-                }
-                $arrayResp = [
-                    'session' => $respSession['session'],
-                    'code_database' => $database->code_database];
-                $dataResp[] = $arrayResp;
-            });
-
-            return $this->accurateSessionRepository->storeSessionAccurate($dataResp);
-        }catch (Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
-        }
-
-    }
-
     public function refreshToken()
     {
-        $refreshToken = $this->accurateTokenRepository->getRefreshToken();
-//        dd($refreshToken->getContent());
+        $refreshToken = $this->accurateTokenInterfaces->getRefreshToken();
         try {
             $params = [
                 'grant_type' => 'refresh_token',
@@ -168,9 +104,9 @@ class AccurateAuthServices
                     isset($respToken['error_description']) ? $respToken['error_description'] : (isset($respToken['error_detail']) ? $respToken['error_detail'] : null));
             }
 
-            $newRefreshToken = $this->accurateTokenRepository->storeToken($respToken);
-            $this->storeDatabases();
-            $this->storeSession();
+            $newRefreshToken = $this->accurateTokenInterfaces->storeToken($respToken);
+            $this->accurateDatabaseServices->storeDatabase();
+            $this->accurateSessionServices->storeSession();
             return $this->successResponse($newRefreshToken, 200, 'Refresh Token Successfully');
         } catch (Exception $e) {
             Log::debug($e->getMessage());
