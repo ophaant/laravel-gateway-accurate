@@ -34,6 +34,10 @@ class AccurateSessionRepository implements AccurateSessionInterfaces
         } catch (\Exception $e) {
             DB::rollBack();
             Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }catch (\PDOException $e) {
+            DB::rollBack();
+            Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
     }
@@ -47,6 +51,10 @@ class AccurateSessionRepository implements AccurateSessionInterfaces
             }
             return $databases->session;
         }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }
     }
