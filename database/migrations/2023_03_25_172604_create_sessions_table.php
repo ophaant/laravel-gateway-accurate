@@ -15,7 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('session');
             $table->timestamp('expire_in');
-            $table->bigInteger('code_database');
+            $table->string('code_array')->unique();
+            $table->foreignUuid('database_id')->constrained('databases')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

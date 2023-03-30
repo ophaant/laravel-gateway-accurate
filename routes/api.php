@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\Accurate\CustomerController;
 use App\Http\Controllers\Api\V1\Accurate\DatabaseController;
 use App\Http\Controllers\Api\V1\Accurate\EmployeeController;
 use App\Http\Controllers\Api\V1\Accurate\ItemController;
+use App\Http\Controllers\Api\V1\Accurate\SessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/employees', [EmployeeController::class,'getEmployee']);
         Route::get('/items', [ItemController::class,'getItem']);
         Route::post('/refresh-token', [AuthController::class,'refreshToken']);
-        Route::post('/sessions', [AuthController::class,'setSession']);
+        Route::post('/sessions', [SessionController::class,'session']);
     });
 });

@@ -8,7 +8,6 @@ use App\Interfaces\AccurateSessionInterfaces;
 use App\Interfaces\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
-use Exceptionn;
 use Illuminate\Support\Facades\Log;
 
 class AccurateSessionServices
@@ -42,7 +41,7 @@ class AccurateSessionServices
                 }
                 $arrayResp = [
                     'session' => $respSession['session'],
-                    'code_database' => $database->code_database];
+                    'database_id' => $database->id];
                 $dataResp[] = $arrayResp;
             });
 
