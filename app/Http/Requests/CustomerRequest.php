@@ -24,6 +24,7 @@ class CustomerRequest extends FormRequest
         return [
             'code_database' => 'required|integer',
             'page' => 'integer|nullable|min:1',
+            'keywords' => 'string|nullable',
         ];
     }
 
