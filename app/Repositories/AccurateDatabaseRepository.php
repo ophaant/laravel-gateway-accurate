@@ -64,4 +64,21 @@ class AccurateDatabaseRepository implements AccurateDatabaseInterfaces
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
+
+    public function getDatabaseByCodeDatabase(int $code)
+    {
+        try {
+            $database = Database::where('code_database', $code)->first(['id']);
+            if (!$database) {
+                return $this->errorResponse('Error: Database Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            }
+            return $database->id;
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
 }
