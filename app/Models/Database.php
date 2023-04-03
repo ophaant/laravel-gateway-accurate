@@ -23,4 +23,9 @@ class Database extends Model
     {
         return $this->hasOne(Session::class);
     }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

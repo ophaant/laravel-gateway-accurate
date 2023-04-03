@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('customer_name', 50);
             $table->string('customer_no', 50);
             $table->bigInteger('customer_id');
-            $table->bigInteger('code_database');
             $table->string('code_array')->unique();
+            $table->foreignUuid('database_id')->constrained('databases')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
 use App\Interfaces\AccurateCustomerInterfaces;
 use App\Models\Customer;
+use App\Models\Database;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
@@ -20,8 +21,11 @@ class AccurateCustomerRepository implements AccurateCustomerInterfaces
         try {
             DB::beginTransaction();
             $col = collect($data);
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($database);
+            $existingCustomers = Database::with('customers')->find($databaseUuid)->customers;
 
-            $existingCustomers = Customer::where('code_database', $database)->get();
+//            $existingCustomers = Customer::where('database_id', $databaseId)->get();
 
 // loop through existing customers and delete if not in $col
             foreach ($existingCustomers as $existingCustomer) {
@@ -32,10 +36,10 @@ class AccurateCustomerRepository implements AccurateCustomerInterfaces
                     $existingCustomer->delete();
                 }
             }
-            $customer = $col->map(function($item,$key) use($database) {
+            $customer = $col->map(function($item,$key) use($database,$databaseUuid) {
                 return [
                     'customer_id' => $item['id'],
-                    'code_database' => $database,
+                    'database_id' => $databaseUuid,
                     'customer_no' => $item['customerNo'],
                     'customer_name' => $item['name'],
                     'id'=>$this->newUniqueId(),

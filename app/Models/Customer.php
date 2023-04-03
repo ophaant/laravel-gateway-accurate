@@ -12,10 +12,15 @@ class Customer extends Model
     use HasUuids;
 
     protected $table = 'customers';
-    protected $fillable = ['code_database', 'customer_name', 'customer_no', 'customer_id','code_array'];
+    protected $fillable = ['database_id', 'customer_name', 'customer_no', 'customer_id','code_array'];
 
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    public function database()
+    {
+        return $this->belongsTo(Database::class);
+    }
 }
