@@ -53,7 +53,9 @@ class AccurateSessionRepository implements AccurateSessionInterfaces
     public function getSessionAccurate($code_database)
     {
         try {
-            $databases = Database::where('code_database',$code_database)->first(['id'])->session;
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
+            $databases = Database::find($databaseUuid)->session;
             if (!$databases) {
                 return $this->errorResponse('Error: Session Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
             }
