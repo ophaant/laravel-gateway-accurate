@@ -19,7 +19,7 @@ class ItemController extends Controller
     {
         $code_database = $request->code_database;
         $page = $request->page;
-        return $this->accurateItemServices->getItem($code_database, $page);
-//        return $this->accurateItemServices->getAllItem($code_database);
+//        return $this->accurateItemServices->getItem($code_database, $page);
+        return $this->accurateItemServices->getAllItem($code_database);
     }
 }

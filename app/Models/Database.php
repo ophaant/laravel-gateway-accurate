@@ -33,4 +33,9 @@ class Database extends Model
     {
         return $this->hasMany(Employee::class);
     }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
 }

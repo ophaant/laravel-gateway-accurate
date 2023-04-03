@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
 use App\Interfaces\AccurateItemInterfaces;
+use App\Models\Database;
 use App\Models\Item;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -21,7 +22,9 @@ class AccurateItemRepository implements AccurateItemInterfaces
             DB::beginTransaction();
             $col = collect($data);
 
-            $existingItems = Item::where('code_database', $database)->get();
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($database);
+            $existingItems = Database::with('customers')->find($databaseUuid)->customers;
 
 // loop through existing customers and delete if not in $col
             foreach ($existingItems as $existingItem) {
@@ -32,10 +35,10 @@ class AccurateItemRepository implements AccurateItemInterfaces
                     $existingItem->delete();
                 }
             }
-            $item = $col->map(function($item,$key) use($database) {
+            $item = $col->map(function($item,$key) use($database,$databaseUuid) {
                 return [
                     'item_id' => $item['id'],
-                    'code_database' => $database,
+                    'database_id' => $databaseUuid,
                     'item_no' => $item['no'],
                     'item_name' => $item['name'],
                     'id'=>$this->newUniqueId(),
