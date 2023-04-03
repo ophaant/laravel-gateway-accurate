@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('employee_name',50);
             $table->string('employee_no',15);
             $table->bigInteger('employee_id');
-            $table->bigInteger('code_database');
             $table->string('code_array')->unique();
+            $table->foreignUuid('database_id')->constrained('databases')->onDelete('cascade');
             $table->timestamps();
         });
     }

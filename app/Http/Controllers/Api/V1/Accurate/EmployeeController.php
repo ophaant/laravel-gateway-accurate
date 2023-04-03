@@ -19,7 +19,7 @@ class EmployeeController extends Controller
     {
         $code_database = $request->code_database;
         $page = $request->page;
-        return $this->accurateEmployeeServices->getEmployee($code_database, $page);
-//        return $this->accurateEmployeeServices->getAllEmployee($code_database);
+//        return $this->accurateEmployeeServices->getEmployee($code_database, $page);
+        return $this->accurateEmployeeServices->getAllEmployee($code_database);
     }
 }

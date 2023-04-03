@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
 use App\Interfaces\AccurateEmployeeInterfaces;
+use App\Models\Database;
 use App\Models\Employee;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -21,7 +22,9 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
             DB::beginTransaction();
             $col = collect($data);
 
-            $existingEmployees = Employee::where('code_database', $database)->get();
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($database);
+            $existingEmployees = Database::with('customers')->find($databaseUuid)->employees;
 
 // loop through existing customers and delete if not in $col
             foreach ($existingEmployees as $existingEmployee) {
@@ -32,10 +35,10 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
                     $existingEmployee->delete();
                 }
             }
-            $customer = $col->map(function($item,$key) use($database) {
+            $customer = $col->map(function($item,$key) use($database,$databaseUuid) {
                 return [
                     'employee_id' => $item['id'],
-                    'code_database' => $database,
+                    'database_id' => $databaseUuid,
                     'employee_no' => $item['number'],
                     'employee_name' => $item['name'],
                     'id'=>$this->newUniqueId(),

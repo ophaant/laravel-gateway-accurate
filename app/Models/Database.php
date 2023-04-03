@@ -28,4 +28,9 @@ class Database extends Model
     {
         return $this->hasMany(Customer::class);
     }
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
