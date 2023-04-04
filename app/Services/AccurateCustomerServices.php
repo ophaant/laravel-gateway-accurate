@@ -10,7 +10,6 @@ use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;
 use Illuminate\Support\Facades\Log;
-use PHPUnit\Event\Code\Throwable;
 
 class AccurateCustomerServices
 {
@@ -77,7 +76,7 @@ class AccurateCustomerServices
 
             $page = 1;
             $results = [];
-            do{
+            do {
                 $params = [
                     'fields' => 'customerNo,name,id',
                     'sp.sort' => 'id|desc',
@@ -109,9 +108,40 @@ class AccurateCustomerServices
                 $results = array_merge($results, $data);
 
                 $page++;
-            }while($page <= $meta['pageCount']);
+            } while ($page <= $meta['pageCount']);
 
             return $this->accurateCustomerInterfaces->storeCustomer($results, $code_database);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
+        }
+
+    }
+
+    public function saveCustomer($request)
+    {
+        try {
+            $url = $this->checkDatabaseAccurate($request->code_database);
+            $session = $this->accurateSessionInterfaces->getSessionAccurate($request->code_database);
+            $token = $this->accurateTokenInterfaces->getAccessToken();
+
+            $headers = [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+                'X-Session-ID' => $session,
+            ];
+
+            $respCustomer = sendReq('POST', $url . 'customer/save.do', $request, false, false, null, $headers);
+
+            if ($respCustomer['http_code'] != 200) {
+                Log::debug($respCustomer);
+                return $this->errorResponse(isset($respCustomer['error']) ? $respCustomer['error'] : (isset($respCustomer['message']) ? $respCustomer['message'] : $respCustomer['d'][0]),
+                    $respCustomer['http_code'], errorCodes::ACC_CUST_FAILED,
+                    isset($respCustomer['error_description']) ? $respCustomer['error_description'] : (isset($respCustomer['error_detail']) ? $respCustomer['error_detail'] : null));
+            }
+
+            $data = $respCustomer['d'];
+
+            return $this->successResponse($data, 200, 'Customers Successfully');
         } catch (Exception $e) {
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }

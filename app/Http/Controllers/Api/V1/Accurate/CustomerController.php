@@ -22,5 +22,9 @@ class CustomerController extends Controller
 //        return $this->accurateCustomerServices->getCustomer($code_database, $page);
         return $this->accurateCustomerServices->getAllCustomer($code_database);
     }
+    public function store(CustomerRequest $request)
+    {
+        return $this->accurateCustomerServices->saveCustomer($request);
+    }
 
 }

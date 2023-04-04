@@ -21,11 +21,23 @@ class CustomerRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'code_database' => 'required|integer',
-            'page' => 'integer|nullable|min:1',
-            'keywords' => 'string|nullable',
-        ];
+        if ($this->method() == 'GET') {
+            return [
+                'code_database' => 'required|integer',
+                'page' => 'integer|nullable|min:1',
+                'keywords' => 'string|nullable',
+            ];
+        }
+        if ($this->method() == 'POST') {
+            return [
+                'code_database' => 'required|integer',
+                'name' => 'required|string',
+                'customerNo' => 'required|string',
+                'branchName' => 'required|string',
+                'categoryName' => 'required|string',
+                'salesmanNumber' => 'required|string',
+            ];
+        }
     }
 
     public function messages()

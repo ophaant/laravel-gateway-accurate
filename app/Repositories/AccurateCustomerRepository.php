@@ -61,5 +61,23 @@ class AccurateCustomerRepository implements AccurateCustomerInterfaces
         }
     }
 
+    public function getCustByName(string $name, int $code_database)
+    {
+        try {
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
+            $customerNo = Database::with('customers')->find($databaseUuid)->customers->where('customer_name', $name)->first();
+            if (!$customerNo) {
+                return $this->errorResponse('Error: Customer No Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
+            }
+            return $customerNo->customer_no;
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
 
 }

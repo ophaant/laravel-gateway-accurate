@@ -35,10 +35,13 @@ Route::prefix('v1')->group(function () {
     Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
         Route::get('/databases', [DatabaseController::class,'index']);
         Route::get('/customers', [CustomerController::class,'getCustomer']);
+        Route::post('/customers', [CustomerController::class,'store']);
         Route::get('/employees', [EmployeeController::class,'getEmployee']);
         Route::get('/items', [ItemController::class,'getItem']);
         Route::get('/sales-invoices', [SalesinvoiceController::class,'index']);
+        Route::post('/sales-invoices', [SalesinvoiceController::class,'store']);
         Route::post('/refresh-token', [AuthController::class,'refreshToken']);
+        Route::get('/sessions', [SessionController::class,'index']);
         Route::post('/sessions', [SessionController::class,'session']);
     });
 });
