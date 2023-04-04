@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\errorCodes;
 use App\Traits\ApiResponse;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -68,7 +69,7 @@ class Handler extends ExceptionHandler
             return $this->errorResponse('The specified URL cannot be found', 404);
         }
         if ($exception instanceof ValidationException) {
-            return $this->errorResponse($exception->getMessage(), 400, null, $exception->errors());
+            return $this->errorResponse($exception->getMessage(), 400, errorCodes::VALIDATION_FAILED, $exception->errors());
         }
 
         if ($exception instanceof HttpException) {
