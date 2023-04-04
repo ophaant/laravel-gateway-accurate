@@ -16,5 +16,11 @@ class errorCodes
     const DATABASE_QUERY_FAILED = 'DBC-002';
     const DATABASE_UNKNOWN_ERROR = 'DBC-003';
     const CODE_WRONG_ERROR = 'CWR-001';
+    const DB_SESSION_NOT_FOUND = 'DEMP-001';
+    const DB_DATA_NOT_FOUND = 'DEMP-002';
+    const DB_CUST_NOT_FOUND = 'DEMP-003';
+    const DB_ITM_NOT_FOUND = 'DEMP-004';
+    const DB_EMP_NOT_FOUND = 'DEMP-005';
+    const VALIDATION_FAILED = 'VAL-001';
 
 }
