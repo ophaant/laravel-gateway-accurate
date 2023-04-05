@@ -62,5 +62,24 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
         }
     }
 
+    public function getEmpByName(string $name, int $code_database)
+    {
+        try {
+            $databaseRepo= app(AccurateDatabaseRepository::class);
+            $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
+            $employeeNo = Database::with('employees')->find($databaseUuid)->employees->where('employee_name', $name)->first();
+            if (!$employeeNo) {
+                return $this->errorResponse('Error: Employee No Accurate Not Found.', 404, errorCodes::DB_EMP_NOT_FOUND);
+            }
+            return $employeeNo->employee_no;
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
+
 
 }
