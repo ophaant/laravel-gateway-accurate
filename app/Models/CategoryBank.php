@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,4 +19,13 @@ class CategoryBank extends Model
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
+
+    public function scopeFindCategoryByName(Builder $query,string $name): void
+    {
+        $query->where('category_bank_name', $name);
+    }
+    public function banks()
+    {
+        return $this->hasMany(Bank::class);
+    }
 }

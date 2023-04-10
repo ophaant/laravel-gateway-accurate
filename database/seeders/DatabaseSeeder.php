@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call([
             CategoryBankSeeder::class,
-            AccountBankTypeSeeder::class
+            AccountBankTypeSeeder::class,
+            BankSeeder::class
         ]);
     }
 }
