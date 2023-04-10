@@ -132,10 +132,10 @@ class AccurateCustomerServices
 
             $respCustomer = sendReq('POST', $url . 'customer/save.do', $request, false, false, null, $headers);
 
-            if ($respCustomer['http_code'] != 200) {
+            if (!$respCustomer['s']) {
                 Log::debug($respCustomer);
                 return $this->errorResponse(isset($respCustomer['error']) ? $respCustomer['error'] : (isset($respCustomer['message']) ? $respCustomer['message'] : $respCustomer['d'][0]),
-                    $respCustomer['http_code'], errorCodes::ACC_CUST_FAILED,
+                    400, errorCodes::ACC_CUST_FAILED,
                     isset($respCustomer['error_description']) ? $respCustomer['error_description'] : (isset($respCustomer['error_detail']) ? $respCustomer['error_detail'] : null));
             }
 

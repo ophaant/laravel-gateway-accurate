@@ -66,7 +66,10 @@ class AccurateCustomerRepository implements AccurateCustomerInterfaces
         try {
             $databaseRepo= app(AccurateDatabaseRepository::class);
             $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
-            $customerNo = Database::with('customers')->find($databaseUuid)->customers->where('customer_name', $name)->first();
+            $customerNo = Customer::where('customer_name',$name)->with(['database' => function ($query) use ($code_database) {
+                $query->where('code_database', $code_database);
+            }])->first();
+//            $customerNo = Database::with('customers')->find($databaseUuid)->customers->where('customer_name', $name)->first();
             if (!$customerNo) {
                 return $this->errorResponse('Error: Customer No Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
             }

@@ -121,9 +121,9 @@ class AccurateSalesinvoiceServices
 
             $customer_name = $request->customerName;
             $customer_no = str_replace(' ', '-', $customer_name);
-            $customerNo = $this->accurateCustomerInterfaces->getCustByName($customer_no, $request->code_database);
+            $customerNo = $this->accurateCustomerInterfaces->getCustByName($customer_name, $request->code_database);
 
-            if (!is_string($customerNo)){
+            if (!is_string($customerNo)) {
                 $parameter = new \stdClass();
                 $parameter->name = $customer_name;
                 $parameter->customerNo = $customer_no;
@@ -134,15 +134,12 @@ class AccurateSalesinvoiceServices
 
                 $postCust = $this->accurateCustomerServices->saveCustomer($parameter);
 
-                if ($postCust->getStatusCode()!=200){
+                if ($postCust->getStatusCode() != 200) {
                     Log::error($postCust);
-                    return $this->errorResponse(isset($postCust['error']) ? $postCust['error'] : (isset($postCust['message']) ? $postCust['message'] : $postCust['d'][0]),
-                        $postCust['http_code'], errorCodes::ACC_CUST_FAILED,
-                        isset($postCust['error_description']) ? $postCust['error_description'] : (isset($postCust['error_detail']) ? $postCust['error_detail'] : null));
-
+                    return $postCust;
                 }
-                $saveCustomer = $this->accurateCustomerServices->saveCustomer($parameter);
-                if ($saveCustomer->getStatusCode()!=200){
+                $saveCustomer = $this->accurateCustomerServices->getAllCustomer($request->code_database);
+                if ($saveCustomer->getStatusCode() != 200) {
                     Log::error($saveCustomer);
                     return $saveCustomer;
                 }
