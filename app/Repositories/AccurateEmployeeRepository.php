@@ -67,7 +67,10 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
         try {
             $databaseRepo= app(AccurateDatabaseRepository::class);
             $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
-            $employeeNo = Database::with('employees')->find($databaseUuid)->employees->where('employee_name', $name)->first();
+            $employeeNo = Employee::where('employee_name',$name)->with(['database' => function ($query) use ($code_database) {
+                $query->where('code_database', $code_database);
+            }])->first();
+//            $employeeNo = Database::with('employees')->find($databaseUuid)->employees->where('employee_name', $name)->first();
             if (!$employeeNo) {
                 return $this->errorResponse('Error: Employee No Accurate Not Found.', 404, errorCodes::DB_EMP_NOT_FOUND);
             }
