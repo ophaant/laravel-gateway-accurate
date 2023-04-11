@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Accurate\AccountBankTypeController;
 use App\Http\Controllers\Api\V1\Accurate\AuthController;
 use App\Http\Controllers\Api\V1\Accurate\CustomerController;
 use App\Http\Controllers\Api\V1\Accurate\DatabaseController;
@@ -43,5 +44,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/refresh-token', [AuthController::class,'refreshToken']);
         Route::get('/sessions', [SessionController::class,'index']);
         Route::post('/sessions', [SessionController::class,'session']);
+    });
+    Route::prefix('bank')->group(function (){
+        Route::get('/account-type', [AccountBankTypeController::class,'index']);
+
     });
 });
