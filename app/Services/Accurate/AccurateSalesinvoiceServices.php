@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Accurate;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateCustomerInterfaces;
-use App\Interfaces\AccurateEmployeeInterfaces;
-use App\Interfaces\AccurateSessionInterfaces;
-use App\Interfaces\AccurateTokenInterfaces;
+use App\Interfaces\Accurate\AccurateCustomerInterfaces;
+use App\Interfaces\Accurate\AccurateEmployeeInterfaces;
+use App\Interfaces\Accurate\AccurateSessionInterfaces;
+use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use App\Traits\checkUrlAccurate;
 use Exception;

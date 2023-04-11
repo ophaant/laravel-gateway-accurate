@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1\Accurate;
 
-use App\Helpers\errorCodes;
 use App\Http\Controllers\Controller;
-use App\Models\Token;
-use App\Services\AccurateAuthServices;
-use Exception;
+use App\Services\Accurate\AccurateAuthServices;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {

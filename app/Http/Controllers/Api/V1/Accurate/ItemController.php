@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\V1\Accurate;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
-use App\Services\AccurateItemServices;
-use Illuminate\Http\Request;
+use App\Services\Accurate\AccurateItemServices;
 
 class ItemController extends Controller
 {

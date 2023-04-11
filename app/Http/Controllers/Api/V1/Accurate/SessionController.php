@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api\V1\Accurate;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\AccurateSessionInterfaces;
-use App\Services\AccurateDatabaseServices;
-use App\Services\AccurateSessionServices;
+use App\Interfaces\Accurate\AccurateSessionInterfaces;
+use App\Services\Accurate\AccurateSessionServices;
 
 class SessionController extends Controller
 {

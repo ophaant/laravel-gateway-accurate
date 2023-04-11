@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accurate;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateDatabaseInterfaces;
+use App\Interfaces\Accurate\AccurateDatabaseInterfaces;
 use App\Models\Database;
-use App\Models\Token;
 use App\Traits\ApiResponse;
-use Dflydev\DotAccessData\Data;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

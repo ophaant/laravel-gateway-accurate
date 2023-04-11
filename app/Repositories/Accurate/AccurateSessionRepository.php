@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accurate;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateSessionInterfaces;
+use App\Interfaces\Accurate\AccurateSessionInterfaces;
 use App\Models\Database;
 use App\Models\Session;
 use App\Traits\ApiResponse;

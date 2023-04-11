@@ -1,80 +1,79 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accurate;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateEmployeeInterfaces;
+use App\Interfaces\Accurate\AccurateCustomerInterfaces;
+use App\Models\Customer;
 use App\Models\Database;
-use App\Models\Employee;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
+class AccurateCustomerRepository implements AccurateCustomerInterfaces
 {
     use ApiResponse, HasUuids;
-    public function storeEmployee(array $data, int $database)
+    public function storeCustomer(array $data, int $database)
     {
         try {
             DB::beginTransaction();
             $col = collect($data);
-
             $databaseRepo= app(AccurateDatabaseRepository::class);
             $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($database);
-            $existingEmployees = Database::with('customers')->find($databaseUuid)->employees;
+            $existingCustomers = Database::with('customers')->find($databaseUuid)->customers;
+
+//            $existingCustomers = Customer::where('database_id', $databaseId)->get();
 
 // loop through existing customers and delete if not in $col
-            foreach ($existingEmployees as $existingEmployee) {
-                $found = $col->first(function($item) use($existingEmployee) {
-                    return $item['id'] === $existingEmployee->customer_id;
+            foreach ($existingCustomers as $existingCustomer) {
+                $found = $col->first(function($item) use($existingCustomer) {
+                    return $item['id'] === $existingCustomer->customer_id;
                 });
                 if (!$found) {
-                    $existingEmployee->delete();
+                    $existingCustomer->delete();
                 }
             }
             $customer = $col->map(function($item,$key) use($database,$databaseUuid) {
                 return [
-                    'employee_id' => $item['id'],
+                    'customer_id' => $item['id'],
                     'database_id' => $databaseUuid,
-                    'employee_no' => $item['number'],
-                    'employee_name' => $item['name'],
+                    'customer_no' => $item['customerNo'],
+                    'customer_name' => $item['name'],
                     'id'=>$this->newUniqueId(),
                     'code_array'=>$database.'-'.$key
                 ];
             })
                 ->chunk(1000)
                 ->each(function (Collection $chunk) {
-                    Employee::upsert($chunk->all(), 'code_array');
+                    Customer::upsert($chunk->all(), 'code_array');
                 });
             DB::commit();
-            return $this->successResponse($customer, 200, 'Employee Store Successfully');
+            return $this->successResponse($customer, 200, 'Customer Store Successfully');
         }catch (\PDOException $e) {
-            DB::rollBack();
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         }catch (\Exception $e) {
-            DB::rollBack();
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
 
-    public function getEmpByName(string $name, int $code_database)
+    public function getCustByName(string $name, int $code_database)
     {
         try {
             $databaseRepo= app(AccurateDatabaseRepository::class);
             $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($code_database);
-            $employeeNo = Employee::where('employee_name',$name)->with(['database' => function ($query) use ($code_database) {
+            $customerNo = Customer::where('customer_name',$name)->with(['database' => function ($query) use ($code_database) {
                 $query->where('code_database', $code_database);
             }])->first();
-//            $employeeNo = Database::with('employees')->find($databaseUuid)->employees->where('employee_name', $name)->first();
-            if (!$employeeNo) {
-                return $this->errorResponse('Error: Employee No Accurate Not Found.', 404, errorCodes::DB_EMP_NOT_FOUND);
+//            $customerNo = Database::with('customers')->find($databaseUuid)->customers->where('customer_name', $name)->first();
+            if (!$customerNo) {
+                return $this->errorResponse('Error: Customer No Accurate Not Found.', 404, errorCodes::ACC_TOKEN_NOT_FOUND);
             }
-            return $employeeNo->employee_no;
+            return $customerNo->customer_no;
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
@@ -83,6 +82,5 @@ class AccurateEmployeeRepository implements AccurateEmployeeInterfaces
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
-
 
 }

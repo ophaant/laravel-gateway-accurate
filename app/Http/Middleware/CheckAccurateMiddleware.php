@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateTokenInterfaces;
+use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use Closure;
 use Illuminate\Http\Request;

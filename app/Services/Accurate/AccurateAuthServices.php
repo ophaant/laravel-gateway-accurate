@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Accurate;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateDatabaseInterfaces;
-use App\Interfaces\AccurateSessionInterfaces;
-use App\Interfaces\AccurateTokenInterfaces;
+use App\Interfaces\Accurate\AccurateDatabaseInterfaces;
+use App\Interfaces\Accurate\AccurateSessionInterfaces;
+use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
 use Exceptionn;

@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Accurate;
 
 use App\Http\Controllers\Controller;
-use App\Services\AccurateDatabaseServices;
-use Illuminate\Http\Request;
+use App\Services\Accurate\AccurateDatabaseServices;
 
 class DatabaseController extends Controller
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accurate;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateTokenInterfaces;
+use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Models\Token;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\DB;

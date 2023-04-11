@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Accurate;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccurateItemInterfaces;
+use App\Interfaces\Accurate\AccurateItemInterfaces;
 use App\Models\Database;
 use App\Models\Item;
 use App\Traits\ApiResponse;

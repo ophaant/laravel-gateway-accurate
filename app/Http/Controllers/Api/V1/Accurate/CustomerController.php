@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Accurate;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequest;
-use App\Services\AccurateCustomerServices;
+use App\Services\Accurate\AccurateCustomerServices;
 
 class CustomerController extends Controller
 {
