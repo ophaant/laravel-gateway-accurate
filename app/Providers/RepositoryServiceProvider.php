@@ -2,8 +2,20 @@
 
 namespace App\Providers;
 
-use App\Interfaces\AccurateTokenInterfaces;
-use App\Repositories\AccurateTokenRepository;
+use App\Interfaces\AccountBankTypeInterfaces;
+use App\Interfaces\Accurate\AccurateCustomerInterfaces;
+use App\Interfaces\Accurate\AccurateDatabaseInterfaces;
+use App\Interfaces\Accurate\AccurateEmployeeInterfaces;
+use App\Interfaces\Accurate\AccurateItemInterfaces;
+use App\Interfaces\Accurate\AccurateSessionInterfaces;
+use App\Interfaces\Accurate\AccurateTokenInterfaces;
+use App\Repositories\AccountBankTypeRepository;
+use App\Repositories\Accurate\AccurateCustomerRepository;
+use App\Repositories\Accurate\AccurateDatabaseRepository;
+use App\Repositories\Accurate\AccurateEmployeeRepository;
+use App\Repositories\Accurate\AccurateItemRepository;
+use App\Repositories\Accurate\AccurateSessionRepository;
+use App\Repositories\Accurate\AccurateTokenRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -18,24 +30,28 @@ class RepositoryServiceProvider extends ServiceProvider
             AccurateTokenRepository::class,
         );
         $this->app->bind(
-            'App\Interfaces\AccurateDatabaseInterfaces',
-            'App\Repositories\AccurateDatabaseRepository',
+            AccurateDatabaseInterfaces::class,
+            AccurateDatabaseRepository::class,
         );
         $this->app->bind(
-            'App\Interfaces\AccurateSessionInterfaces',
-            'App\Repositories\AccurateSessionRepository',
+            AccurateSessionInterfaces::class,
+            AccurateSessionRepository::class,
         );
         $this->app->bind(
-            'App\Interfaces\AccurateCustomerInterfaces',
-            'App\Repositories\AccurateCustomerRepository',
+            AccurateCustomerInterfaces::class,
+            AccurateCustomerRepository::class,
         );
         $this->app->bind(
-            'App\Interfaces\AccurateEmployeeInterfaces',
-            'App\Repositories\AccurateEmployeeRepository',
+            AccurateEmployeeInterfaces::class,
+            AccurateEmployeeRepository::class
         );
         $this->app->bind(
-            'App\Interfaces\AccurateItemInterfaces',
-            'App\Repositories\AccurateItemRepository',
+            AccurateItemInterfaces::class,
+            AccurateItemRepository::class
+        );
+        $this->app->bind(
+            AccountBankTypeInterfaces::class,
+            AccountBankTypeRepository::class
         );
     }
 
