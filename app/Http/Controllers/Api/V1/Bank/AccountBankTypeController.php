@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Accurate;
+namespace App\Http\Controllers\Api\V1\Bank;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CustomerRequest;
 use App\Services\AccountBankTypeServices;
 
 class AccountBankTypeController extends Controller

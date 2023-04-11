@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V1\Accurate\AccountBankTypeController;
 use App\Http\Controllers\Api\V1\Accurate\AuthController;
 use App\Http\Controllers\Api\V1\Accurate\CustomerController;
 use App\Http\Controllers\Api\V1\Accurate\DatabaseController;
@@ -8,7 +7,8 @@ use App\Http\Controllers\Api\V1\Accurate\EmployeeController;
 use App\Http\Controllers\Api\V1\Accurate\ItemController;
 use App\Http\Controllers\Api\V1\Accurate\SalesinvoiceController;
 use App\Http\Controllers\Api\V1\Accurate\SessionController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\Bank\AccountBankTypeController;
+use App\Http\Controllers\Api\V1\Bank\CategoryBankController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,7 +46,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/sessions', [SessionController::class,'session']);
     });
     Route::prefix('bank')->group(function (){
-        Route::get('/account-type', [AccountBankTypeController::class,'index']);
+        Route::get('/account-types', [AccountBankTypeController::class,'index']);
+        Route::get('/categories', [CategoryBankController::class,'index']);
 
     });
 });

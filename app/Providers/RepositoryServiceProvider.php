@@ -9,6 +9,7 @@ use App\Interfaces\Accurate\AccurateEmployeeInterfaces;
 use App\Interfaces\Accurate\AccurateItemInterfaces;
 use App\Interfaces\Accurate\AccurateSessionInterfaces;
 use App\Interfaces\Accurate\AccurateTokenInterfaces;
+use App\Interfaces\CategoryBankInterfaces;
 use App\Repositories\AccountBankTypeRepository;
 use App\Repositories\Accurate\AccurateCustomerRepository;
 use App\Repositories\Accurate\AccurateDatabaseRepository;
@@ -16,6 +17,7 @@ use App\Repositories\Accurate\AccurateEmployeeRepository;
 use App\Repositories\Accurate\AccurateItemRepository;
 use App\Repositories\Accurate\AccurateSessionRepository;
 use App\Repositories\Accurate\AccurateTokenRepository;
+use App\Repositories\CategoryBankRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -52,6 +54,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             AccountBankTypeInterfaces::class,
             AccountBankTypeRepository::class
+        );
+        $this->app->bind(
+            CategoryBankInterfaces::class,
+            CategoryBankRepository::class
         );
     }
 
