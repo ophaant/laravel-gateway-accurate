@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\V1\Bank;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryBankRequest;
-use App\Services\AccountBankTypeServices;
-use App\Services\CategoryBankServices;
+use App\Services\Bank\CategoryBankServices;
 
 class CategoryBankController extends Controller
 {

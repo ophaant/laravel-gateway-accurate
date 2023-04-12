@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Bank;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\AccountBankTypeInterfaces;
+use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Support\Facades\Log;

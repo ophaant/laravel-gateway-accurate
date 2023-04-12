@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Bank;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccountBankTypeInterfaces;
-use App\Interfaces\CategoryBankInterfaces;
-use App\Models\AccountBankType;
+use App\Interfaces\Bank\CategoryBankInterfaces;
 use App\Models\CategoryBank;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;

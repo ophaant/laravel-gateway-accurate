@@ -1,18 +1,13 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Bank;
 
 use App\Exceptions\handleDatabaseException;
 use App\Helpers\errorCodes;
-use App\Interfaces\AccountBankTypeInterfaces;
-use App\Interfaces\Accurate\AccurateCustomerInterfaces;
+use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Models\AccountBankType;
-use App\Models\Customer;
-use App\Models\Database;
 use App\Traits\ApiResponse;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AccountBankTypeRepository implements AccountBankTypeInterfaces

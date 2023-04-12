@@ -2,24 +2,24 @@
 
 namespace App\Providers;
 
-use App\Interfaces\AccountBankTypeInterfaces;
 use App\Interfaces\Accurate\AccurateCustomerInterfaces;
 use App\Interfaces\Accurate\AccurateDatabaseInterfaces;
 use App\Interfaces\Accurate\AccurateEmployeeInterfaces;
 use App\Interfaces\Accurate\AccurateItemInterfaces;
 use App\Interfaces\Accurate\AccurateSessionInterfaces;
 use App\Interfaces\Accurate\AccurateTokenInterfaces;
-use App\Interfaces\BankInterfaces;
-use App\Interfaces\CategoryBankInterfaces;
-use App\Repositories\AccountBankTypeRepository;
+use App\Interfaces\Bank\AccountBankTypeInterfaces;
+use App\Interfaces\Bank\BankInterfaces;
+use App\Interfaces\Bank\CategoryBankInterfaces;
 use App\Repositories\Accurate\AccurateCustomerRepository;
 use App\Repositories\Accurate\AccurateDatabaseRepository;
 use App\Repositories\Accurate\AccurateEmployeeRepository;
 use App\Repositories\Accurate\AccurateItemRepository;
 use App\Repositories\Accurate\AccurateSessionRepository;
 use App\Repositories\Accurate\AccurateTokenRepository;
-use App\Repositories\BankRepository;
-use App\Repositories\CategoryBankRepository;
+use App\Repositories\Bank\AccountBankTypeRepository;
+use App\Repositories\Bank\BankRepository;
+use App\Repositories\Bank\CategoryBankRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider

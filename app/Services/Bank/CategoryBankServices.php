@@ -1,28 +1,38 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Bank;
 
 use App\Helpers\errorCodes;
-use App\Interfaces\BankInterfaces;
-use App\Interfaces\CategoryBankInterfaces;
+use App\Interfaces\Bank\CategoryBankInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
-class BankServices
+class CategoryBankServices
 {
     use ApiResponse;
 
-    protected $bankInterfaces;
+    protected $categoryBankInterfaces;
 
-    public function __construct(BankInterfaces $bankInterfaces)
+    public function __construct(CategoryBankInterfaces $categoryBankInterfaces)
     {
-        $this->bankInterfaces = $bankInterfaces;
+        $this->categoryBankInterfaces = $categoryBankInterfaces;
     }
     public function getAll()
     {
         try {
-            return $this->bankInterfaces->getAll();
+            return $this->categoryBankInterfaces->getAll();
+        }catch (Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
+        }
+
+    }
+
+    public function store(array $data)
+    {
+        try {
+            return $this->categoryBankInterfaces->store($data);
         }catch (Exception $e) {
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
@@ -33,40 +43,32 @@ class BankServices
     public function getById($id)
     {
         try {
-            return $this->bankInterfaces->getById($id);
+            return $this->categoryBankInterfaces->findById($id);
         }catch (Exception $e) {
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
-    }
 
-    public function create(array $data)
-    {
-        try {
-            return $this->bankInterfaces->create($data);
-        }catch (Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
-        }
     }
-
     public function update(array $data, $id)
     {
         try {
-            return $this->bankInterfaces->update($data, $id);
+            return $this->categoryBankInterfaces->update($data, $id);
         }catch (Exception $e) {
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
+
     }
 
     public function delete($id)
     {
         try {
-            return $this->bankInterfaces->delete($id);
+            return $this->categoryBankInterfaces->delete($id);
         }catch (Exception $e) {
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());
         }
+
     }
 }
