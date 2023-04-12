@@ -27,7 +27,7 @@ class AccurateTokenRepository implements AccurateTokenInterfaces
                 ]
             );
             DB::commit();
-            return $token;
+            return $this->successResponse(null, 200, 'Token Store Successfully');
         }catch (\PDOException $e) {
             DB::rollBack();
             Log::debug($e->getMessage());

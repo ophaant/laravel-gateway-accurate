@@ -76,9 +76,18 @@ class AccurateAuthServices
 
 //        $respToken['expires_in'] = Carbon::now()->addSeconds($respToken['expires_in'])->toDateTimeString();
 
-            $this->accurateTokenInterfaces->storeToken($respToken);
-            $this->accurateDatabaseServices->storeDatabase();
-            $this->accurateSessionServices->storeSession();
+            $token = $this->accurateTokenInterfaces->storeToken($respToken);
+            if ($token->getStatusCode()!=200){
+                return $token;
+            }
+            $database = $this->accurateDatabaseServices->storeDatabase();
+            if ($database->getStatusCode() != 200){
+                return $database;
+            }
+            $session = $this->accurateSessionServices->storeSession();
+            if ($session->getStatusCode() != 200){
+                return $session;
+            }
             return $this->successResponse(null, 200, 'Setup Auth Successfully');
         } catch (Exception $e) {
             Log::error($e->getMessage());
