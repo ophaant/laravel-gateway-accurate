@@ -25,12 +25,16 @@ class CategoryBankController extends Controller
         return $this->categoryBankServices->store($request->all());
     }
 
+    public function show($id)
+    {
+        return $this->categoryBankServices->getById($id);
+    }
     public function update(CategoryBankRequest $request, $id)
     {
         return $this->categoryBankServices->update($request->all(), $id);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         return $this->categoryBankServices->delete($id);
     }
