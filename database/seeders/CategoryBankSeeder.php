@@ -16,7 +16,7 @@ class CategoryBankSeeder extends Seeder
 
     public function run(): void
     {
-        $data = collect([
+        $data = [
             [
                 'id' => $this->newUniqueId(),
                 'category_bank_name' => 'Mandiri',
@@ -41,9 +41,7 @@ class CategoryBankSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
-        ]);
-        $data->each(function ($item) {
-            CategoryBank::create($item);
-        });
+        ];
+        CategoryBank::insert($data);
     }
 }
