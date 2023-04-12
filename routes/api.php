@@ -49,6 +49,9 @@ Route::prefix('v1')->group(function () {
     Route::prefix('bank')->group(function (){
         Route::get('/account-types', [AccountBankTypeController::class,'index']);
         Route::get('/categories', [CategoryBankController::class,'index']);
+        Route::post('/categories', [CategoryBankController::class,'store']);
+        Route::put('/categories/{id}', [CategoryBankController::class,'update']);
+        Route::delete('/categories/{id}', [CategoryBankController::class,'delete']);
         Route::get('/lists', [BankController::class,'index']);
 
     });

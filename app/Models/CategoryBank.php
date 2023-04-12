@@ -13,13 +13,13 @@ class CategoryBank extends Model
     use HasUuids;
 
     protected $table = 'category_banks';
-    protected $fillable = ['category_bank_name'];
+    protected $fillable = ['id','category_bank_name'];
 
+    public $incrementing = false;
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
-
     public function scopeFindCategoryByName(Builder $query,string $name): void
     {
         $query->where('category_bank_name', $name);
