@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Accurate\ItemController;
 use App\Http\Controllers\Api\V1\Accurate\SalesinvoiceController;
 use App\Http\Controllers\Api\V1\Accurate\SessionController;
 use App\Http\Controllers\Api\V1\Bank\AccountBankTypeController;
+use App\Http\Controllers\Api\V1\Bank\BankController;
 use App\Http\Controllers\Api\V1\Bank\CategoryBankController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('bank')->group(function (){
         Route::get('/account-types', [AccountBankTypeController::class,'index']);
         Route::get('/categories', [CategoryBankController::class,'index']);
+        Route::get('/lists', [BankController::class,'index']);
 
     });
 });

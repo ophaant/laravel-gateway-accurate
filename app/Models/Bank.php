@@ -14,6 +14,7 @@ class Bank extends Model
     protected $table = 'banks';
     protected $fillable = ['account_id', 'account_number', 'account_name', 'category_bank_id', 'account_type_id'];
 
+    protected $hidden = ['account_type_id', 'category_bank_id'];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
