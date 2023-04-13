@@ -161,7 +161,7 @@ class AccurateSalesinvoiceServices
             if ($request->description == null) {
                 $request->merge(['description' => '']);
             }
-
+            $request->merge(['saveAsStatusType'=> 'UNAPPROVED']);
             $headers = [
                 'Authorization' => 'Bearer ' . $token,
                 'Accept' => 'application/json',
