@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\Accurate\SessionController;
 use App\Http\Controllers\Api\V1\Bank\AccountBankTypeController;
 use App\Http\Controllers\Api\V1\Bank\BankController;
 use App\Http\Controllers\Api\V1\Bank\CategoryBankController;
+use App\Http\Controllers\Api\V1\JournalVoucherUpload\JournalVoucherUploadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,5 +51,9 @@ Route::prefix('v1')->group(function () {
         Route::resource('account-types', AccountBankTypeController::class)->only(['index']);
         Route::resource('categories', CategoryBankController::class)->except(['create', 'edit']);
         Route::resource('lists', BankController::class)->except(['create', 'edit']);
+    });
+
+    Route::prefix('journal-voucher-upload')->group(function (){
+        Route::post('/', [JournalVoucherUploadController::class,'store']);
     });
 });

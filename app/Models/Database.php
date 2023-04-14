@@ -38,4 +38,9 @@ class Database extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function journalVoucherUploads()
+    {
+        return $this->hasMany(JournalVoucherUpload::class);
+    }
 }

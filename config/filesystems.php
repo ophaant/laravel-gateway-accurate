@@ -32,7 +32,8 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => public_path(),
+//            'root' => storage_path('app'),
             'throw' => false,
         ],
 
@@ -54,6 +55,27 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
+        ],
+
+        'files_bca' => [
+            'driver' => 'local',
+            'root' => 'assets/files_bca/dirpoll/request/',
+        ],
+
+        'files_bri' => [
+            'driver' => 'local',
+            'root' => 'assets/files_bri/dirpoll/request/',
+            'throw' => false,
+        ],
+
+        'files_bni' => [
+            'driver' => 'local',
+            'root' => 'assets/files_bni/dirpoll/request/',
+        ],
+
+        'files_mandiri' => [
+            'driver' => 'local',
+            'root' => 'assets/files_mandiri/dirpoll/request/',
         ],
 
     ],

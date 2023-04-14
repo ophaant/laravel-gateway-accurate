@@ -11,6 +11,7 @@ use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Interfaces\Bank\BankInterfaces;
 use App\Interfaces\Bank\CategoryBankInterfaces;
+use App\Interfaces\JournalVoucherUpload\JournalVoucherUploadInterfaces;
 use App\Repositories\Accurate\AccurateCustomerRepository;
 use App\Repositories\Accurate\AccurateDatabaseRepository;
 use App\Repositories\Accurate\AccurateEmployeeRepository;
@@ -20,6 +21,7 @@ use App\Repositories\Accurate\AccurateTokenRepository;
 use App\Repositories\Bank\AccountBankTypeRepository;
 use App\Repositories\Bank\BankRepository;
 use App\Repositories\Bank\CategoryBankRepository;
+use App\Repositories\JournalVoucherUpload\JournalVoucherUploadRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -64,6 +66,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             BankInterfaces::class,
             BankRepository::class
+        );
+        $this->app->bind(
+            JournalVoucherUploadInterfaces::class,
+            JournalVoucherUploadRepository::class
         );
     }
 

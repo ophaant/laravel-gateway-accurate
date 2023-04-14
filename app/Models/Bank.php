@@ -29,4 +29,9 @@ class Bank extends Model
     {
         return $this->belongsTo(AccountBankType::class, 'account_type_id');
     }
+
+    public function journalVoucherUploads()
+    {
+        return $this->hasMany(JournalVoucherUpload::class, 'bank_id');
+    }
 }
