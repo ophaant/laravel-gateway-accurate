@@ -32,7 +32,7 @@ Route::prefix('v1')->group(function () {
         return response()->json(['status' => 'success','data'=>'Gateway Accurate Version 1.0'], 200);
     });
 
-    Route::get('/auth', [AuthController::class,'getCode']);
+    Route::get('/setup', [AuthController::class,'getCode']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
 
     Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
@@ -48,10 +48,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/sessions', [SessionController::class,'session']);
     });
     Route::prefix('bank')->group(function (){
-        Route::resource('account-types', AccountBankTypeController::class)->only(['index']);
-        Route::resource('categories', CategoryBankController::class)->except(['create', 'edit']);
-        Route::resource('lists', BankController::class)->except(['create', 'edit']);
+        Route::apiResource('account-types', AccountBankTypeController::class)->only(['index']);
+        Route::apiResource('categories', CategoryBankController::class)->except(['create', 'edit']);
+        Route::apiResource('lists', BankController::class)->except(['create', 'edit']);
     });
 
     Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
+
+    Route::prefix('auth')->group(function (){
+        Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register']);
+        Route::post('/login', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'login']);
+        Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout']);
+    });
 });

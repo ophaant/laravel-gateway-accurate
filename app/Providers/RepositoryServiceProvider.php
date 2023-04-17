@@ -8,6 +8,7 @@ use App\Interfaces\Accurate\AccurateEmployeeInterfaces;
 use App\Interfaces\Accurate\AccurateItemInterfaces;
 use App\Interfaces\Accurate\AccurateSessionInterfaces;
 use App\Interfaces\Accurate\AccurateTokenInterfaces;
+use App\Interfaces\Auth\AuthInterfaces;
 use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Interfaces\Bank\BankInterfaces;
 use App\Interfaces\Bank\CategoryBankInterfaces;
@@ -18,6 +19,7 @@ use App\Repositories\Accurate\AccurateEmployeeRepository;
 use App\Repositories\Accurate\AccurateItemRepository;
 use App\Repositories\Accurate\AccurateSessionRepository;
 use App\Repositories\Accurate\AccurateTokenRepository;
+use App\Repositories\Auth\AuthRepository;
 use App\Repositories\Bank\AccountBankTypeRepository;
 use App\Repositories\Bank\BankRepository;
 use App\Repositories\Bank\CategoryBankRepository;
@@ -70,6 +72,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             JournalVoucherUploadInterfaces::class,
             JournalVoucherUploadRepository::class
+        );
+        $this->app->bind(
+            AuthInterfaces::class,
+            AuthRepository::class
         );
     }
 
