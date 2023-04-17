@@ -56,8 +56,8 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
 
     Route::prefix('auth')->group(function (){
-        Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register']);
-        Route::post('/login', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'login']);
+        Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register'])->name('register');
+        Route::post('/login', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'login'])->name('login');
         Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout']);
     });
 });

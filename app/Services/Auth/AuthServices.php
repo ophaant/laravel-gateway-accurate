@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Exceptions\handleDatabaseException;
 use App\Exports\JournalVoucherUploadExport;
 use App\Helpers\errorCodes;
+use App\Http\Requests\RegisterRequest;
 use App\Imports\JournalVoucherUploadImport;
 use App\Interfaces\Auth\AuthInterfaces;
 use App\Traits\ApiResponse;
@@ -41,26 +42,16 @@ class AuthServices
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
-    public function getAll()
+
+    public function login($request)
     {
         try {
-            $journalVoucherUpload = $this->journalVoucherUploadInterfaces->getAll();
-            return $this->successResponse($journalVoucherUpload, 200, 'Journal Voucher Upload List Get Successfully');
-        } catch (PDOException $e) {
-            Log::debug($e->getMessage());
-            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
-        } catch (Exception $e) {
-            Log::debug($e->getMessage());
-            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
-        }
-    }
-    public function delete($id)
-    {
-        try {
-            $journalVoucherUpload = $this->journalVoucherUploadInterfaces->getById($id);
-            $this->journalVoucherUploadInterfaces->delete($id);
-            return $this->successResponse($journalVoucherUpload, 200, 'Journal Voucher Upload Delete Successfully');
-        } catch (PDOException $e) {
+            if (!auth()->attempt($request->only('email','password'))) {
+                return $this->errorResponse('Invalid Credentials', 401, errorCodes::CODE_WRONG_ERROR);
+            }
+            $token = auth()->user()->createToken('Laravel8PassportAuth')->accessToken;
+            return $this->successResponse(['token' => $token], 200, 'User Login Successfully');
+        }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
         } catch (Exception $e) {

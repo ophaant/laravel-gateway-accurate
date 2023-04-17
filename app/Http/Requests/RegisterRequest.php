@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -21,11 +22,20 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
+        $emailRules = [
+            'required',
+            'email:dns,rfc',
+        ];
+
+        // tambahkan aturan validasi unique:users pada email jika rute saat ini bukan login
+        if (request()->route()->getName() !== 'login') {
+            $emailRules[] = Rule::unique('users', 'email');
+        }
+
         return [
-            'name' => 'required',
-            'email' => 'required|email:dns,rfc|unique:users',
+            'email' => $emailRules,
             'password' => 'required|min:8',
-            'c_password' => 'required|same:password',
+            'c_password' => [Rule::requiredIf($this->routeIs('register')),'same:password'],
         ];
     }
 }
