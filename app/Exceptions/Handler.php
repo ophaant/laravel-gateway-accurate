@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Helpers\errorCodes;
 use App\Traits\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -60,6 +61,9 @@ class Handler extends ExceptionHandler
 
     public function handleException($request, Throwable $exception)
     {
+        if ($exception instanceof AuthenticationException) {
+            return $this->errorResponse('Unauthenticated', 401);
+        }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
             return $this->errorResponse('Method Not Allowed', 405);

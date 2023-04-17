@@ -58,6 +58,6 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function (){
         Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register'])->name('register');
         Route::post('/login', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'login'])->name('login');
-        Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout']);
+        Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout'])->middleware('auth:api')->name('logout');
     });
 });

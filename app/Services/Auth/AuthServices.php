@@ -10,6 +10,7 @@ use App\Imports\JournalVoucherUploadImport;
 use App\Interfaces\Auth\AuthInterfaces;
 use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PDOException;
@@ -51,6 +52,20 @@ class AuthServices
             }
             $token = auth()->user()->createToken('Laravel8PassportAuth')->accessToken;
             return $this->successResponse(['token' => $token], 200, 'User Login Successfully');
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        } catch (Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
+
+    public function logout($request)
+    {
+        try {
+            $user = $request->user()->token()->revoke();
+            return $this->successResponse([], 200, 'User Logout Successfully');
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
