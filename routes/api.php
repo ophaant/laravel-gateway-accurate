@@ -53,7 +53,5 @@ Route::prefix('v1')->group(function () {
         Route::resource('lists', BankController::class)->except(['create', 'edit']);
     });
 
-    Route::prefix('journal-voucher-upload')->group(function (){
-        Route::post('/', [JournalVoucherUploadController::class,'store']);
-    });
+    Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
 });

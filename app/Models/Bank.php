@@ -32,6 +32,6 @@ class Bank extends Model
 
     public function journalVoucherUploads()
     {
-        return $this->hasMany(JournalVoucherUpload::class, 'bank_id');
+        return $this->hasMany(JournalVoucherUpload::class);
     }
 }

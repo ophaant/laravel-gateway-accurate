@@ -15,8 +15,17 @@ class JournalVoucherUploadController extends Controller
     {
         $this->journalVoucherUploadServices = $journalVoucherUploadServices;
     }
+
+    public function index()
+    {
+        return $this->journalVoucherUploadServices->getAll();
+    }
     public function store(JournalVoucherUploadRequest $request)
     {
         return $this->journalVoucherUploadServices->upload($request);
+    }
+    public function destroy($id)
+    {
+        return $this->journalVoucherUploadServices->delete($id);
     }
 }

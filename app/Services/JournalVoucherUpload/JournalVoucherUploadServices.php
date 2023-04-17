@@ -2,6 +2,7 @@
 
 namespace App\Services\JournalVoucherUpload;
 
+use App\Exceptions\handleDatabaseException;
 use App\Exports\JournalVoucherUploadExport;
 use App\Helpers\errorCodes;
 use App\Imports\JournalVoucherUploadImport;
@@ -30,6 +31,19 @@ class JournalVoucherUploadServices
         $this->accurateDatabaseInterfaces = $accurateDatabaseInterfaces;
     }
 
+    public function getAll()
+    {
+        try {
+            $journalVoucherUpload = $this->journalVoucherUploadInterfaces->getAll();
+            return $this->successResponse($journalVoucherUpload, 200, 'Journal Voucher Upload List Get Successfully');
+        } catch (PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        } catch (Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
     public function upload($request)
     {
         try {
@@ -103,6 +117,20 @@ class JournalVoucherUploadServices
         }
     }
 
+    public function delete($id)
+    {
+        try {
+            $journalVoucherUpload = $this->journalVoucherUploadInterfaces->getById($id);
+            $this->journalVoucherUploadInterfaces->delete($id);
+            return $this->successResponse($journalVoucherUpload, 200, 'Journal Voucher Upload Delete Successfully');
+        } catch (PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        } catch (Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
     public function detectDelimiter($csvFile)
     {
         $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];

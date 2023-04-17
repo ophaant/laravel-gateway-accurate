@@ -14,8 +14,14 @@ class JournalVoucherUpload extends Model
     protected $table = 'journal_voucher_uploads';
     protected $fillable = ['file_name','file_location','status','queue','bank_id','database_id'];
     protected $increment = false;
+    protected $hidden = ['bank_id','database_id'];
 
-    public function banks()
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
+    public function bank()
     {
         return $this->belongsTo(Bank::class,'bank_id');
     }

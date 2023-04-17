@@ -19,8 +19,25 @@ class JournalVoucherUploadRepository implements JournalVoucherUploadInterfaces
     public function getAll()
     {
         try {
-            $bank = Bank::with('category:id,category_bank_name','accountType:id,account_type_name')->get();
-            return $this->successResponse($bank, 200, 'Bank List Get Successfully');
+            $bank = JournalVoucherUpload::with('bank:id,account_name','database:id,code_database,name')->orderByDesc('updated_at')->paginate(1);
+            return $bank;
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
+
+    public function getById($id)
+    {
+        try {
+            $bank = JournalVoucherUpload::find($id);
+            if (!$bank) {
+                return $this->errorResponse('Journal Voucher Upload Not Found', 404, errorCodes::CODE_WRONG_ERROR);
+            }
+            return $bank;
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
@@ -51,13 +68,13 @@ class JournalVoucherUploadRepository implements JournalVoucherUploadInterfaces
     {
         try {
             DB::beginTransaction();
-            $bank = Bank::find($id);
+            $bank = JournalVoucherUpload::find($id);
             if (!$bank) {
-                return $this->errorResponse('Bank Not Found', 404, errorCodes::CODE_WRONG_ERROR);
+                return $this->errorResponse('Journal Voucher Upload Not Found', 404, errorCodes::CODE_WRONG_ERROR);
             }
             $bank->delete();
             DB::commit();
-            return $this->successResponse($bank, 200, 'Bank Delete Successfully');
+            return $this->successResponse($bank, 200, 'Journal Voucher Upload Delete Successfully');
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             DB::rollBack();
