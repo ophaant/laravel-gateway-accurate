@@ -11,6 +11,7 @@ class DatabaseController extends Controller
     public function __construct(AccurateDatabaseServices $accurateDatabaseServices)
     {
         $this->accurateDatabaseServices = $accurateDatabaseServices;
+        $this->middleware('permission:databases-read', ['only' => ['index']]);
     }
     public function index(){
         return $this->accurateDatabaseServices->getDatabase();

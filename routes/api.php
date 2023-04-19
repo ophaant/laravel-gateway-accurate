@@ -35,29 +35,30 @@ Route::prefix('v1')->group(function () {
     Route::get('/setup', [AuthController::class,'getCode']);
     Route::get('/oauth-callback{url?}', [AuthController::class,'oauthCallback']);
 
-    Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
-        Route::get('/databases', [DatabaseController::class,'index']);
-        Route::get('/customers', [CustomerController::class,'getCustomer']);
-        Route::post('/customers', [CustomerController::class,'store']);
-        Route::get('/employees', [EmployeeController::class,'getEmployee']);
-        Route::get('/items', [ItemController::class,'getItem']);
-        Route::get('/sales-invoices', [SalesinvoiceController::class,'index']);
-        Route::post('/sales-invoices', [SalesinvoiceController::class,'store']);
-        Route::post('/refresh-token', [AuthController::class,'refreshToken']);
-        Route::get('/sessions', [SessionController::class,'index']);
-        Route::post('/sessions', [SessionController::class,'session']);
-    });
-    Route::prefix('bank')->group(function (){
-        Route::apiResource('account-types', AccountBankTypeController::class)->only(['index']);
-        Route::apiResource('categories', CategoryBankController::class)->except(['create', 'edit']);
-        Route::apiResource('lists', BankController::class)->except(['create', 'edit']);
-    });
-
-    Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
-
     Route::prefix('auth')->group(function (){
-        Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register'])->name('register');
+        Route::post('/register', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'register'])->middleware('auth:api')->name('register');
         Route::post('/login', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'login'])->name('login');
         Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout'])->middleware('auth:api')->name('logout');
     });
+
+    Route::middleware('auth:api')->group(function (){
+        Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
+            Route::post('/refresh-token', [AuthController::class,'refreshToken']);
+            Route::get('/databases', [DatabaseController::class,'index']);
+            Route::apiResource('customers', CustomerController::class)->only(['index', 'store']);
+            Route::apiResource('employees', EmployeeController::class)->only(['index']);
+            Route::apiResource('items', ItemController::class)->only(['index']);
+            Route::apiResource('sales-invoices', SalesinvoiceController::class)->only(['index', 'store']);
+            Route::apiResource('sessions', SessionController::class)->only(['store']);
+        });
+        Route::prefix('bank')->group(function (){
+            Route::apiResource('account-types', AccountBankTypeController::class)->only(['index']);
+            Route::apiResource('categories', CategoryBankController::class)->except(['create', 'edit']);
+            Route::apiResource('lists', BankController::class)->except(['create', 'edit'])->middleware('auth:api');
+        });
+
+        Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
+    });
+
+
 });

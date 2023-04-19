@@ -14,12 +14,9 @@ class SessionController extends Controller
     {
         $this->accurateSessionServices = $accurateSessionServices;
         $this->accurateSessionInterfaces = $accurateSessionInterfaces;
+        $this->middleware('permission:sessions-create', ['only' => ['store']]);
     }
-    public function index(){
-        return $this->accurateSessionInterfaces->getSessionAccurate(237751);
-    }
-
-    public function session(){
+    public function store(){
         return $this->accurateSessionServices->storeSession();
     }
 }

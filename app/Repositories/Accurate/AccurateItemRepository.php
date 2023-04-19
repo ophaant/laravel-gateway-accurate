@@ -24,7 +24,7 @@ class AccurateItemRepository implements AccurateItemInterfaces
 
             $databaseRepo= app(AccurateDatabaseRepository::class);
             $databaseUuid = $databaseRepo->getDatabaseByCodeDatabase($database);
-            $existingItems = Database::with('customers')->find($databaseUuid)->customers;
+            $existingItems = Database::with('items')->find($databaseUuid)->items;
 
 // loop through existing customers and delete if not in $col
             foreach ($existingItems as $existingItem) {

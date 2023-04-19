@@ -12,6 +12,10 @@ class CategoryBankController extends Controller
     public function __construct(CategoryBankServices $categoryBankServices)
     {
         $this->categoryBankServices = $categoryBankServices;
+        $this->middleware('permission:category_banks-create', ['only' => ['store']]);
+        $this->middleware('permission:category_banks-read', ['only' => ['index','show']]);
+        $this->middleware('permission:category_banks-update', ['only' => ['update']]);
+        $this->middleware('permission:category_banks-delete', ['only' => ['destroy']]);
     }
 
     public function index()

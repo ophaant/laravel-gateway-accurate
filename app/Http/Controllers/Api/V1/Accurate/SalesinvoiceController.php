@@ -13,6 +13,8 @@ class SalesinvoiceController extends Controller
     public function __construct(AccurateSalesinvoiceServices $accurateSalesinvoiceServices)
     {
         $this->accurateSalesinvoiceServices = $accurateSalesinvoiceServices;
+        $this->middleware('permission:sales_invoices-read', ['only' => ['index']]);
+        $this->middleware('permission:sales_invoices-create', ['only' => ['store']]);
     }
 
     public function index(CustomerRequest $request)

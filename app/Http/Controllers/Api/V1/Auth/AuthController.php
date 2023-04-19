@@ -14,6 +14,7 @@ class AuthController extends Controller
     public function __construct(AuthServices $authServices)
     {
         $this->authServices = $authServices;
+        $this->middleware('permission:users-create', ['only' => ['register']]);
     }
     public function register(RegisterRequest $request)
     {

@@ -12,13 +12,13 @@ class ItemController extends Controller
     public function __construct(AccurateItemServices $accurateItemServices)
     {
         $this->accurateItemServices = $accurateItemServices;
+        $this->middleware('permission:items-read', ['only' => ['index']]);
     }
 
-    public function getItem(CustomerRequest $request)
+    public function index(CustomerRequest $request)
     {
         $code_database = $request->code_database;
         $page = $request->page;
-//        return $this->accurateItemServices->getItem($code_database, $page);
-        return $this->accurateItemServices->getAllItem($code_database);
+        return $this->accurateItemServices->getItem($code_database, $page);
     }
 }

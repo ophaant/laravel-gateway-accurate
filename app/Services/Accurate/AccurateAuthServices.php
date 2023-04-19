@@ -20,16 +20,23 @@ class AccurateAuthServices
     protected $accurateSessionInterfaces;
     protected $accurateSessionServices;
     protected $accurateDatabaseServices;
+    protected $accurateCustomerServices;
+    protected $accurateEmployeeServices;
+    protected $accurateItemServices;
 
     public function __construct(AccurateTokenInterfaces $accurateAuthInterfaces, AccurateDatabaseInterfaces $accurateDatabaseInterfaces,
                                 AccurateSessionInterfaces $accurateSessionInterfaces, AccurateSessionServices $accurateSessionServices,
-    AccurateDatabaseServices $accurateDatabaseServices)
+    AccurateCustomerServices $accurateCustomerServices, AccurateItemServices $accurateItemServices,
+    AccurateDatabaseServices $accurateDatabaseServices, AccurateEmployeeServices $accurateEmployeeServices)
     {
         $this->accurateTokenInterfaces = $accurateAuthInterfaces;
         $this->accurateDatabaseInterfaces = $accurateDatabaseInterfaces;
         $this->accurateSessionInterfaces = $accurateSessionInterfaces;
         $this->accurateSessionServices = $accurateSessionServices;
         $this->accurateDatabaseServices = $accurateDatabaseServices;
+        $this->accurateCustomerServices = $accurateCustomerServices;
+        $this->accurateEmployeeServices = $accurateEmployeeServices;
+        $this->accurateItemServices = $accurateItemServices;
     }
 
     public function getCode()
@@ -88,6 +95,27 @@ class AccurateAuthServices
             if ($session->getStatusCode() != 200){
                 return $session;
             }
+
+            $databases = $this->accurateDatabaseInterfaces->getDatabase();
+            if (!is_iterable($databases)) {
+                return $databases;
+            }
+            $databases->each(function ($item) {
+                $customer = $this->accurateCustomerServices->getAllCustomer($item->code_database);
+                if ($customer->getStatusCode() != 200){
+                    return $customer;
+                }
+                $employee = $this->accurateEmployeeServices->getAllEmployee($item->code_database);
+                if ($employee->getStatusCode() != 200){
+                    return $employee;
+                }
+                $item = $this->accurateItemServices->getAllItem($item->code_database);
+                if ($item->getStatusCode() != 200){
+                    return $item;
+                }
+            });
+
+
             return $this->successResponse(null, 200, 'Setup Auth Successfully');
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -98,6 +126,9 @@ class AccurateAuthServices
     public function refreshToken()
     {
         $refreshToken = $this->accurateTokenInterfaces->getRefreshToken();
+        if (!is_string($refreshToken)) {
+            return $refreshToken;
+        }
         try {
             $params = [
                 'grant_type' => 'refresh_token',
@@ -114,9 +145,16 @@ class AccurateAuthServices
             }
 
             $newRefreshToken = $this->accurateTokenInterfaces->storeToken($respToken);
-            $this->accurateDatabaseServices->storeDatabase();
-            $this->accurateSessionServices->storeSession();
-            return $this->successResponse($newRefreshToken, 200, 'Refresh Token Successfully');
+
+            $database = $this->accurateDatabaseServices->storeDatabase();
+            if ($database->getStatusCode() != 200){
+                return $database;
+            }
+            $session = $this->accurateSessionServices->storeSession();
+            if ($session->getStatusCode() != 200){
+                return $session;
+            }
+            return $this->successResponse(JSON_DECODE($newRefreshToken->getContent()), 200, 'Refresh Token Successfully');
         } catch (Exception $e) {
             Log::debug($e->getMessage());
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR, $e->getMessage());

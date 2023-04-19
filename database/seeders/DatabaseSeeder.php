@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CategoryBankSeeder::class,
             AccountBankTypeSeeder::class,
-            BankSeeder::class
+            BankSeeder::class,
+            LaratrustSeeder::class
         ]);
     }
 }

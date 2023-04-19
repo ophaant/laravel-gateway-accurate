@@ -12,13 +12,13 @@ class EmployeeController extends Controller
     public function __construct(AccurateEmployeeServices $accurateEmployeeServices)
     {
         $this->accurateEmployeeServices = $accurateEmployeeServices;
+        $this->middleware('permission:employees-read', ['only' => ['index']]);
     }
 
-    public function getEmployee(CustomerRequest $request)
+    public function index(CustomerRequest $request)
     {
         $code_database = $request->code_database;
         $page = $request->page;
-//        return $this->accurateEmployeeServices->getEmployee($code_database, $page);
-        return $this->accurateEmployeeServices->getAllEmployee($code_database);
+        return $this->accurateEmployeeServices->getEmployee($code_database, $page);
     }
 }

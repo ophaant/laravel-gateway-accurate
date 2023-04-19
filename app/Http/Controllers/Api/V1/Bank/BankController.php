@@ -12,6 +12,10 @@ class BankController extends Controller
     public function __construct(BankServices $bankServices)
     {
         $this->bankServices = $bankServices;
+        $this->middleware('permission:banks-create', ['only' => ['store']]);
+        $this->middleware('permission:banks-read', ['only' => ['index','show']]);
+        $this->middleware('permission:banks-update', ['only' => ['update']]);
+        $this->middleware('permission:banks-delete', ['only' => ['destroy']]);
     }
 
     public function index()
@@ -24,7 +28,7 @@ class BankController extends Controller
         return $this->bankServices->getById($id);
     }
 
-    public function create(BankRequest $request)
+    public function store(BankRequest $request)
     {
         return $this->bankServices->create($request->all());
     }

@@ -13,14 +13,15 @@ class CustomerController extends Controller
     public function __construct(AccurateCustomerServices $accurateCustomerServices)
     {
         $this->accurateCustomerServices = $accurateCustomerServices;
+        $this->middleware('permission:customers-read', ['only' => ['index']]);
+        $this->middleware('permission:customers-create', ['only' => ['store']]);
     }
 
-    public function getCustomer(CustomerRequest $request)
+    public function index(CustomerRequest $request)
     {
         $code_database = $request->code_database;
         $page = $request->page;
-//        return $this->accurateCustomerServices->getCustomer($code_database, $page);
-        return $this->accurateCustomerServices->getAllCustomer($code_database);
+        return $this->accurateCustomerServices->getCustomer($code_database, $page);
     }
     public function store(CustomerRequest $request)
     {
