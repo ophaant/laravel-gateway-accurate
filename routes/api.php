@@ -41,7 +41,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/logout', [\App\Http\Controllers\Api\V1\Auth\AuthController::class,'logout'])->middleware('auth:api')->name('logout');
     });
 
-    Route::middleware('auth:api')->group(function (){
+    Route::middleware('ip.whitelist')->group(function (){
         Route::prefix('accurate')->middleware('checkAccurate')->group(function (){
             Route::post('/refresh-token', [AuthController::class,'refreshToken']);
             Route::get('/databases', [DatabaseController::class,'index']);

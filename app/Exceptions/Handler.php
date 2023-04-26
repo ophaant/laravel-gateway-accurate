@@ -6,6 +6,7 @@ use App\Helpers\errorCodes;
 use App\Traits\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -78,6 +79,10 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if ($exception instanceof \TypeError) {
+            return $this->errorResponse($exception->getMessage(), Response::HTTP_GATEWAY_TIMEOUT);
         }
 
         if ($exception instanceof handleDatabaseException) {
