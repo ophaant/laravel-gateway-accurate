@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\BlockIp;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +17,9 @@ class IpWhiteListMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $ipWhitelist = ['127.0.0.1']; // Replace with your own whitelist
+//        $ipWhitelist = ['127.0.0.1']; // Replace with your own whitelist
         $clientIp = $request->getClientIp();
+        $ipWhitelist = BlockIp::where('ip', $clientIp)->where('status','Enable')->pluck('ip')->toArray();
 
         if (in_array($clientIp, $ipWhitelist)) {
             // If the client IP is in the whitelist, allow access

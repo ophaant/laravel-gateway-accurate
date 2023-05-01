@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             CategoryBankSeeder::class,
             AccountBankTypeSeeder::class,
             BankSeeder::class,
-            LaratrustSeeder::class
+            LaratrustSeeder::class,
+            BlockIpSeeder::class,
         ]);
     }
 }
