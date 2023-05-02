@@ -27,6 +27,7 @@ return [
             'category_banks' => 'c,r,u,d',
             'databases' => 'c,r,u',
             'sessions' => 'c,r,u',
+            'whitelist' => 'c,r,u,d',
         ],
         'office' => [
             'dashboard' => 'r',

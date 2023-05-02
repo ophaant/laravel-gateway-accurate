@@ -13,6 +13,7 @@ use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Interfaces\Bank\BankInterfaces;
 use App\Interfaces\Bank\CategoryBankInterfaces;
 use App\Interfaces\JournalVoucherUpload\JournalVoucherUploadInterfaces;
+use App\Interfaces\Whitelist\WhitelistInterfaces;
 use App\Repositories\Accurate\AccurateCustomerRepository;
 use App\Repositories\Accurate\AccurateDatabaseRepository;
 use App\Repositories\Accurate\AccurateEmployeeRepository;
@@ -24,6 +25,7 @@ use App\Repositories\Bank\AccountBankTypeRepository;
 use App\Repositories\Bank\BankRepository;
 use App\Repositories\Bank\CategoryBankRepository;
 use App\Repositories\JournalVoucherUpload\JournalVoucherUploadRepository;
+use App\Repositories\Whitelist\WhitelistRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -76,6 +78,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             AuthInterfaces::class,
             AuthRepository::class
+        );
+        $this->app->bind(
+            WhitelistInterfaces::class,
+            WhitelistRepository::class
         );
     }
 

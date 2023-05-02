@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\Bank\AccountBankTypeController;
 use App\Http\Controllers\Api\V1\Bank\BankController;
 use App\Http\Controllers\Api\V1\Bank\CategoryBankController;
 use App\Http\Controllers\Api\V1\JournalVoucherUpload\JournalVoucherUploadController;
+use App\Http\Controllers\Api\V1\WhitelistIp\WhitelistIpController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,6 +59,7 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
+        Route::apiResource('whitelist-ips', WhitelistIpController::class)->except(['create', 'edit']);
     });
 
 

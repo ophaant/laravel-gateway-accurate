@@ -64,12 +64,13 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'ip.whitelist' => \App\Http\Middleware\IpWhiteListMiddleware::class,
 
     ];
 
     protected $routeMiddleware = [
         // Other middleware
         'checkAccurate' => \App\Http\Middleware\CheckAccurateMiddleware::class,
-        'ip.whitelist' => \App\Http\Middleware\IpWhiteListMiddleware::class,
+
     ];
 }

