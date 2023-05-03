@@ -36,6 +36,7 @@ class RegisterRequest extends FormRequest
             'email' => $emailRules,
             'password' => 'required|min:8',
             'c_password' => [Rule::requiredIf($this->routeIs('register')),'same:password'],
+            'permissions' => 'required|string',
         ];
     }
 }

@@ -32,6 +32,7 @@ class AuthServices
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
             $user = $this->authInterfaces->create($input);
+            $user->givePermissions(explode(',', $request->permissions));
             $data['token'] =  $user->createToken('MyApp')->accessToken;
             $data['name'] =  $user->name;
             return $this->successResponse($data, 200, 'User Register Successfully');
