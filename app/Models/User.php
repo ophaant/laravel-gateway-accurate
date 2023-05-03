@@ -44,4 +44,9 @@ class User extends Authenticatable implements LaratrustUser
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function blockIp()
+    {
+        return $this->hasOne(BlockIp::class);
+    }
 }

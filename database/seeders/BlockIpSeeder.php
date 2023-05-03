@@ -18,13 +18,15 @@ class BlockIpSeeder extends Seeder
                 'ip'=>'103.180.166.103',
                 'description' => 'Tanjidor POS',
                 'type' => 'Production',
-                'status' =>'Enable'
+                'status' =>'Enable',
+                'user_id' => 3
             ],
             [
                 'ip'=>'127.0.0.1',
                 'description'=>'IP Local Address',
                 'type' => 'Development',
-                'status' =>'Enable'
+                'status' =>'Enable',
+                'user_id' => 1
             ]
 
         ]);

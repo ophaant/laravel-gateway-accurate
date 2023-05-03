@@ -10,4 +10,5 @@ interface WhitelistInterfaces
     public function update(array $data, $id);
     public function delete($id);
     public function getByStatusEnable($ip);
+    public function getByIp($ip);
 }

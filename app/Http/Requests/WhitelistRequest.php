@@ -29,7 +29,8 @@ class WhitelistRequest extends FormRequest
             'ip' => [Rule::requiredIf($this->isMethod('POST')),'ipv4','unique:block_ips,ip'],
             'description' => 'string|nullable',
             'status' => [new Enum(WhitelistStatusEnum::class)],
-            'type' => [new Enum(WhitelistTypeEnum::class)]
+            'type' => [new Enum(WhitelistTypeEnum::class)],
+            'user_id' => 'required|exists:users,id'
         ];
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description',100)->nullable();
             $table->enum('type',['Production','Development'])->default('Production');
             $table->enum('status',['Enable','Disable','Progress'])->default('Disable');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

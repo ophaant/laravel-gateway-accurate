@@ -6,6 +6,7 @@ use App\Interfaces\Whitelist\WhitelistInterfaces;
 use App\Models\BlockIp;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
@@ -30,9 +31,17 @@ class IpWhiteListMiddleware
             return $ipWhitelist;
         }
 
+        $userId = $this->whitelistInterfaces->getByIp($clientIp);
+
+        if (!is_int($userId)) {
+            return $userId;
+        }
+
         if (in_array($clientIp, $ipWhitelist)) {
             // If the client IP is in the whitelist, allow access
-            auth()->attempt(['email' => 'admin1@mail.com', 'password' => '12345678']);
+//            auth()->attempt(['email' => 'admin1@mail.com', 'password' => '12345678']);
+
+            Auth::loginUsingId($userId);
             return $next($request);
         }
 
