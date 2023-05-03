@@ -103,5 +103,19 @@ class WhitelistRepository implements WhitelistInterfaces
             return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
         }
     }
+
+    public function getByStatusEnable($ip)
+    {
+        try {
+            $whitelist = BlockIp::where('ip', $ip)->where('status','Enable')->pluck('ip')->toArray();
+            return $whitelist;
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
 }
 

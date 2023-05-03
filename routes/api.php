@@ -55,7 +55,7 @@ Route::prefix('v1')->group(function () {
         Route::prefix('bank')->group(function (){
             Route::apiResource('account-types', AccountBankTypeController::class)->only(['index']);
             Route::apiResource('categories', CategoryBankController::class)->except(['create', 'edit']);
-            Route::apiResource('lists', BankController::class)->except(['create', 'edit'])->middleware('auth:api');
+            Route::apiResource('lists', BankController::class)->except(['create', 'edit']);
         });
 
         Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
