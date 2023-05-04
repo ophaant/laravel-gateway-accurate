@@ -6,5 +6,9 @@ use Laratrust\Models\Role as RoleModel;
 
 class Role extends RoleModel
 {
-    public $guarded = [];
+    public $fillable = [
+        'name',
+        'display_name',
+        'description',
+    ];
 }
