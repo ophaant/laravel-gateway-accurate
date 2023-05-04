@@ -9,6 +9,7 @@ use App\Interfaces\Accurate\AccurateItemInterfaces;
 use App\Interfaces\Accurate\AccurateSessionInterfaces;
 use App\Interfaces\Accurate\AccurateTokenInterfaces;
 use App\Interfaces\Auth\AuthInterfaces;
+use App\Interfaces\Auth\PermissionInterfaces;
 use App\Interfaces\Auth\RoleInterfaces;
 use App\Interfaces\Bank\AccountBankTypeInterfaces;
 use App\Interfaces\Bank\BankInterfaces;
@@ -22,6 +23,7 @@ use App\Repositories\Accurate\AccurateItemRepository;
 use App\Repositories\Accurate\AccurateSessionRepository;
 use App\Repositories\Accurate\AccurateTokenRepository;
 use App\Repositories\Auth\AuthRepository;
+use App\Repositories\Auth\PermissionRepository;
 use App\Repositories\Auth\RoleRepository;
 use App\Repositories\Bank\AccountBankTypeRepository;
 use App\Repositories\Bank\BankRepository;
@@ -88,6 +90,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             RoleInterfaces::class,
             RoleRepository::class
+        );
+        $this->app->bind(
+            PermissionInterfaces::class,
+            PermissionRepository::class
         );
     }
 
