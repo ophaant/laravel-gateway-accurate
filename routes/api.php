@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Accurate\EmployeeController;
 use App\Http\Controllers\Api\V1\Accurate\ItemController;
 use App\Http\Controllers\Api\V1\Accurate\SalesinvoiceController;
 use App\Http\Controllers\Api\V1\Accurate\SessionController;
+use App\Http\Controllers\Api\V1\Auth\UserController;
 use App\Http\Controllers\Api\V1\Bank\AccountBankTypeController;
 use App\Http\Controllers\Api\V1\Bank\BankController;
 use App\Http\Controllers\Api\V1\Bank\CategoryBankController;
@@ -60,6 +61,8 @@ Route::prefix('v1')->group(function () {
 
         Route::apiResource('journal-voucher-uploads', JournalVoucherUploadController::class)->only(['index','store','destroy']);
         Route::apiResource('whitelist-ips', WhitelistIpController::class)->except(['create', 'edit']);
+        Route::apiResource('users', UserController::class)->except(['create', 'edit']);
+
     });
 
 

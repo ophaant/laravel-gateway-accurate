@@ -18,8 +18,8 @@ class AuthRepository implements AuthInterfaces
     public function getAll()
     {
         try {
-            $bank = JournalVoucherUpload::with('bank:id,account_name','database:id,code_database,name')->orderByDesc('updated_at')->paginate(1);
-            return $bank;
+            $user = User::select('id','name','email')->orderByDesc('updated_at')->simplePaginate(10);
+            return $user;
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
@@ -32,11 +32,11 @@ class AuthRepository implements AuthInterfaces
     public function getById($id)
     {
         try {
-            $bank = JournalVoucherUpload::find($id);
-            if (!$bank) {
+            $user = User::find($id);
+            if (!$user) {
                 return $this->errorResponse('User Not Found', 404, errorCodes::CODE_WRONG_ERROR);
             }
-            return $bank;
+            return $user;
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             throw new handleDatabaseException($e->errorInfo, $e->getMessage());
@@ -67,13 +67,35 @@ class AuthRepository implements AuthInterfaces
     {
         try {
             DB::beginTransaction();
-            $bank = JournalVoucherUpload::find($id);
-            if (!$bank) {
+            $user = User::find($id);
+            if (!$user) {
                 return $this->errorResponse('User Not Found', 404, errorCodes::CODE_WRONG_ERROR);
             }
-            $bank->delete();
+            $user->delete();
             DB::commit();
-            return $this->successResponse($bank, 200, 'User Delete Successfully');
+            return $this->successResponse($user, 200, 'User Delete Successfully');
+        }catch (\PDOException $e) {
+            Log::debug($e->getMessage());
+            DB::rollBack();
+            throw new handleDatabaseException($e->errorInfo, $e->getMessage());
+        }catch (\Exception $e) {
+            Log::debug($e->getMessage());
+            DB::rollBack();
+            return $this->errorResponse($e->getMessage(), 500, errorCodes::CODE_WRONG_ERROR);
+        }
+    }
+
+    public function update($id,$data)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::find($id);
+            if (!$user) {
+                return $this->errorResponse('User Not Found', 404, errorCodes::CODE_WRONG_ERROR);
+            }
+            $user->update($data);
+            DB::commit();
+            return $user;
         }catch (\PDOException $e) {
             Log::debug($e->getMessage());
             DB::rollBack();

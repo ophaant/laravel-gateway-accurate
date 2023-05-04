@@ -23,7 +23,7 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         $emailRules = [
-            'required',
+           Rule::requiredIf($this->routeIs('register')),
             'email:dns,rfc',
         ];
 
@@ -33,10 +33,11 @@ class RegisterRequest extends FormRequest
         }
 
         return [
+            'name' => [Rule::requiredIf($this->routeIs('register')),'string','max:255'],
             'email' => $emailRules,
-            'password' => 'required|min:8',
+            'password' => [Rule::requiredIf($this->routeIs('register','login')),'min:8'],
             'c_password' => [Rule::requiredIf($this->routeIs('register')),'same:password'],
-            'permissions' => 'required|string',
+            'permissions' => [Rule::requiredIf($this->routeIs('register')),'string'],
         ];
     }
 }
