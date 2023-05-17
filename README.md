@@ -1,66 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gateway Accurate API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Requirements
 
-## About Laravel
+- PHP 8.1
+- Composer
+- postgresql
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. run ``composer install``
+2. then run migration ``php artisan migrate:fresh --seed``
+3. generate passport keys ``php artisan passport:install`` if exists then run ``php artisan passport:install --force``
+4. run ``php artisan serve``
+5. run ``php artisan schedule:run``
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Usage
 
-## Learning Laravel
+1. access url ``http://localhost:8000/api/v1/setup`` to setup the application connect accurate api
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## List of API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+table below is list of api that can be used
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Method | URI                                                     |
+|--------|---------------------------------------------------------|
+| GET    | api/v1                                                  |
+| GET    | api/v1/setup                                            |
+| GET    | api/v1/oauth-callback{url?}                             |
+| POST   | api/v1/auth/register                                    |
+| POST   | api/v1/auth/login                                       |
+| POST   | api/v1/auth/logout                                      |
+| POST   | api/v1/accurate/refresh-token                           |
+| GET    | api/v1/accurate/databases                               |
+| GET    | api/v1/accurate/customers                               |
+| POST   | api/v1/accurate/customers                               |
+| GET    | api/v1/accurate/employees                               |
+| GET    | api/v1/accurate/items                                   |
+| GET    | api/v1/accurate/sales-invoices                          |
+| POST   | api/v1/accurate/sales-invoices                          |
+| POST   | api/v1/accurate/sessions                                |
+| GET    | api/v1/bank/account-types                               |
+| GET    | api/v1/bank/categories                                  |
+| POST   | api/v1/bank/categories                                  |
+| GET    | api/v1/bank/categories/{category}                       |
+| PUT    | api/v1/bank/categories/{category}                       |
+| DELETE | api/v1/bank/categories/{category}                       |
+| GET    | api/v1/bank/lists                                       |
+| POST   | api/v1/bank/lists                                       |
+| GET    | api/v1/bank/lists/{list}                                |
+| PUT    | api/v1/bank/lists/{list}                                |
+| DELETE | api/v1/bank/lists/{list}                                |
+| GET    | api/v1/journal-voucher-uploads                          |
+| POST   | api/v1/journal-voucher-uploads                          |
+| DELETE | api/v1/journal-voucher-uploads/{journal_voucher_upload} |
+| GET    | api/v1/whitelist-ips                                    |
+| POST   | api/v1/whitelist-ips                                    |
+| GET    | api/v1/whitelist-ips/{whitelist_ip}                     |
+| PUT    | api/v1/whitelist-ips/{whitelist_ip}                     |
+| DELETE | api/v1/whitelist-ips/{whitelist_ip}                     |
+| GET    | api/v1/users                                            |
+| POST   | api/v1/users                                            |
+| GET    | api/v1/users/{user}                                     |
+| PUT    | api/v1/users/{user}                                     |
+| DELETE | api/v1/users/{user}                                     |
+| GET    | api/v1/roles                                            |
+| POST   | api/v1/roles                                            |
+| GET    | api/v1/roles/{role}                                     |
+| PUT    | api/v1/roles/{role}                                     |
+| DELETE | api/v1/roles/{role}                                     |
+| GET    | api/v1/permissions                                      |
+| POST   | api/v1/permissions                                      |
+| GET    | api/v1/permissions/{permission}                         |
+| PUT    | api/v1/permissions/{permission}                         |
+| DELETE | api/v1/permissions/{permission}                         |
